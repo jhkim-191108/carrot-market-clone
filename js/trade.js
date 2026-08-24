@@ -10,7 +10,7 @@ async function loadProducts() {
   isLoading = true;
 
   try {
-    const response = await fetch(`/api/products?page=${currentPage}`);
+    const response = await fetch(`/api/products?sort=views&page=${currentPage}`);
     const data = await response.json();
 
     if (!response.ok) {
@@ -21,39 +21,55 @@ async function loadProducts() {
       const li = document.createElement("li");
       li.className = "popular-item";
 
-      li.innerHTML = `
-        <a href="trade-post.html?id=${product.id}">
-          <div class="popular-thumb">
-            ${
-              product.thumbnail?.startsWith("http")
-                ? `<img src="${product.thumbnail}" alt="${product.title}">`
-                : ""
-            }
-          </div>
+      const link = document.createElement("a");
+      link.href = `trade-post.html?id=${encodeURIComponent(product.id)}`;
 
-          <div class="popular-text-box">
-            <p class="popular-name">${product.title}</p>
+      const thumb = document.createElement("div");
+      thumb.className = "popular-thumb";
+      if (product.thumbnail?.startsWith("http")) {
+        const img = document.createElement("img");
+        img.src = product.thumbnail;
+        img.alt = product.title || "";
+        thumb.append(img);
+      }
 
-            <strong class="popular-price">
-              ${product.price.toLocaleString()}원
-            </strong>
+      const textBox = document.createElement("div");
+      textBox.className = "popular-text-box";
 
-            <span class="popular-location">
-              ${product.location}
-            </span>
+      const name = document.createElement("p");
+      name.className = "popular-name";
+      name.textContent = product.title || "";
 
-            <div class="popular-info">
-              <span>조회</span>
-              <span class="num">${product.viewCount}</span>
-              <span class="dot">·</span>
-              <span>채팅</span>
-              <span class="num">${product.chatCount}</span>
-            </div>
-          </div>
-        </a>
-      `;
+      const price = document.createElement("strong");
+      price.className = "popular-price";
+      price.textContent = `${Number(product.price).toLocaleString()}원`;
 
-      listEl.appendChild(li);
+      const location = document.createElement("span");
+      location.className = "popular-location";
+      location.textContent = product.location || "";
+
+      const info = document.createElement("div");
+      info.className = "popular-info";
+
+      const viewLabel = document.createElement("span");
+      viewLabel.textContent = "조회";
+      const viewNum = document.createElement("span");
+      viewNum.className = "num";
+      viewNum.textContent = String(product.viewCount ?? 0);
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      dot.textContent = "·";
+      const chatLabel = document.createElement("span");
+      chatLabel.textContent = "채팅";
+      const chatNum = document.createElement("span");
+      chatNum.className = "num";
+      chatNum.textContent = String(product.chatCount ?? 0);
+
+      info.append(viewLabel, viewNum, dot, chatLabel, chatNum);
+      textBox.append(name, price, location, info);
+      link.append(thumb, textBox);
+      li.append(link);
+      listEl.append(li);
     });
 
     hasNext = data.hasNext;

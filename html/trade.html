@@ -46,6 +46,7 @@
             <!-- 작은 화면은 돋보기로 검색창을 열고 닫음 -->
             <div class="searchWrap">
                 <button type="button" id="searchToggle" aria-label="검색 열기" aria-expanded="false">
+                    <img src="../images/icon-search.svg" alt="돋보기버튼">
                 </button>
                 <form id="searchForm">
                     <input type="search" name="search" id="searchTextArea" placeholder="물품이나 동네를 검색해보세요">
@@ -65,7 +66,7 @@
                 <!-- 프로필 버튼 -->
                 <div class="profileDropdown">
                     <button type="button" id="profileButton" aria-label="프로필 메뉴" aria-expanded="false">
-                        <img src="../images/icon-search.svg" alt="돋보기버튼">
+                        <img src="../images/profile.svg" alt="" class="defaultIcon">
                     </button>
                     <!-- 모바일에서만 열림. 데스크톱은 프로필 클릭 시 마이페이지 -->
                     <ul id="dropdownMenu" hidden>
@@ -115,6 +116,7 @@
         </div>
       </section>
     </div>
+    <script src="../js/modal.js"></script>
     <script src="../js/trade.js"></script>
     <script src="../js/header.js"></script>
   </body>

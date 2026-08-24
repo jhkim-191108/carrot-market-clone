@@ -49,6 +49,7 @@ body {
     color: var(--gray-800);
     text-decoration: none;
     cursor: pointer;
+    transition: color 0.2s ease;
 }
 
 /* 지금 페이지 메뉴는 주황 */
@@ -159,6 +160,7 @@ body {
     font-weight: 400;
     text-decoration: none;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 /* 로그인했을 때 로그아웃 */
@@ -196,6 +198,18 @@ body {
     text-decoration: none;
 }
 
+#upperChatButton,
+#upperLogoutButton,
+#upperLoginButton {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+#upperChatButton:hover,
+#upperLoginButton:hover,
+#upperLogoutButton:hover {
+    transform: translateY(-1px);
+}
+
 /* 로그인/로그아웃 상태에 따라 나머지 하나 숨기기 */
 #loginStatusHeader:not([hidden]),
 #logoutStatusHeader:not([hidden]) {
@@ -221,6 +235,7 @@ body {
     padding: 0;
     overflow: hidden;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 .defaultIcon {
@@ -379,4 +394,83 @@ body {
         cursor: pointer;
         box-sizing: border-box;
     }
+}
+
+/* 공통 안내 모달. alert/confirm 대신 */
+.app-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(17, 17, 17, 0.4);
+    box-sizing: border-box;
+    animation: fade-up 0.2s ease;
+}
+
+.app-modal[hidden] {
+    display: none;
+}
+
+.app-modal-box {
+    width: 100%;
+    max-width: 320px;
+    padding: 28px 24px 20px;
+    background: var(--gray-000);
+    border-radius: 12px;
+    box-sizing: border-box;
+    animation: fade-up 0.22s ease;
+}
+
+.app-modal-message {
+    margin: 0 0 24px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--gray-900);
+    text-align: center;
+    word-break: keep-all;
+}
+
+.app-modal-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.app-modal-ok,
+.app-modal-cancel {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.app-modal-ok:hover,
+.app-modal-cancel:hover {
+    transform: translateY(-1px);
+}
+
+.app-modal-ok:hover {
+    filter: brightness(1.06);
+}
+
+.app-modal-ok {
+    border: none;
+    background: var(--orange-600);
+    color: var(--gray-000);
+}
+
+.app-modal-cancel {
+    border: 1px solid var(--gray-200);
+    background: var(--gray-000);
+    color: var(--gray-900);
+}
+
+.app-modal-cancel[hidden] {
+    display: none;
 }

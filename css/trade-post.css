@@ -111,6 +111,13 @@ main {
   font-weight: 700;
   padding: 12px 50px;
   white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.btn-chat:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
 }
 
 .line {

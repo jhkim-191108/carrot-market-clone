@@ -21,7 +21,7 @@
 }
 
 .btn-floating:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.04);
 }
 
 /* ========== 배너 ========== */
@@ -70,6 +70,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  animation: float-y 4s ease-in-out infinite;
 }
 
 /* ========== 인기매물 ========== */
@@ -102,6 +103,18 @@
 
 .popular-item {
   min-width: 0;
+  animation: fade-up 0.4s ease both;
+}
+
+.popular-item a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.popular-item a:hover {
+  transform: translateY(-4px);
 }
 
 .popular-thumb {
@@ -119,6 +132,11 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
+}
+
+.popular-item a:hover .popular-thumb img {
+  transform: scale(1.05);
 }
 
 .popular-text-box {

@@ -107,6 +107,9 @@
 
             <!-- 채팅방. 상대 정보 + 말풍선 + 입력 -->
             <div class="chat-content-container">
+                <div class="chat-empty" id="chatEmpty">
+                    <p>채팅방을 선택하면<br>대화가 여기에 표시됩니다.</p>
+                </div>
                 <div class="chat-room-header">
                     <!-- 모바일에서 목록으로 돌아가기 -->
                     <button type="button" class="chat-back-btn" id="chatBackBtn" aria-label="채팅 목록으로">
@@ -125,15 +128,22 @@
                     </button>
                 </div>
 
-                <!-- 이 채팅이 연결된 상품 -->
-                <div class="chat-product-bar">
-                    <div class="chat-product-thumb"></div>
-                    <div class="chat-product-info">
-                        <p class="chat-product-title-row">
-                            <span class="chat-product-status"></span>
-                            <span class="chat-product-title"></span>
-                        </p>
-                        <p class="chat-product-price"></p>
+                <!-- 이 채팅이 연결된 상품. 왼쪽은 상세, 오른쪽 상태로 거래중 변경 -->
+                <div class="chat-product-row">
+                    <a class="chat-product-bar" id="chatProductLink">
+                        <div class="chat-product-thumb"></div>
+                        <div class="chat-product-info">
+                            <p class="chat-product-title"></p>
+                            <p class="chat-product-price"></p>
+                        </div>
+                    </a>
+                    <div class="chat-product-status-wrap">
+                        <button type="button" class="chat-product-status" id="chatProductStatus"></button>
+                        <ul class="chat-status-menu" id="chatStatusMenu" hidden>
+                            <li><button type="button" data-status="on_sale">거래중</button></li>
+                            <li><button type="button" data-status="reserved">예약중</button></li>
+                            <li><button type="button" data-status="sold">거래완료</button></li>
+                        </ul>
                     </div>
                 </div>
 
@@ -160,6 +170,7 @@
         </section>
     </main>
 
+    <script src="../js/modal.js"></script>
     <script src="../js/header.js"></script>
     <script src="../js/chat.js"></script>
 

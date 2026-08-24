@@ -29,6 +29,22 @@
     border-radius: 5px;
     overflow: hidden;
     cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.mainGridCardBox {
+    min-width: 0;
+    cursor: pointer;
+    animation: fade-up 0.4s ease both;
+    transition: transform 0.2s ease;
+}
+
+.mainGridCardBox:hover {
+    transform: translateY(-4px);
+}
+
+.mainGridCardBox:hover .productImg {
+    transform: scale(1.05);
 }
 /* 상품 정보란 */
 .productInfo {

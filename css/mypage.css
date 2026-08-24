@@ -145,6 +145,12 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.mypage-btn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
 }
 /* 지역은 동네인증에서만 바꿔서 수정 불가처럼 보이게 */
 #locationInput{

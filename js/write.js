@@ -2,15 +2,19 @@
 const fileInput = document.querySelector("#write-image");
 const cameraIcon = document.querySelector(".icon-camera");
 const preview = document.querySelector(".preview");
+const imgCount = document.querySelector(".img-count");
 const params = new URLSearchParams(window.location.search);
 const editId = params.get("id");
 
 let uploadedImageUrl = "";
 
-// 카메라 아이콘 → 숨겨둔 file input
-cameraIcon.addEventListener("click", () => {
-  fileInput.click();
-});
+function showImagePreview(url) {
+  uploadedImageUrl = url;
+  preview.src = url;
+  preview.hidden = false;
+  cameraIcon.hidden = true;
+  imgCount.hidden = true;
+}
 
 // 고른 사진을 POST /api/images 하고 미리보기
 fileInput.addEventListener("change", async () => {
@@ -20,32 +24,23 @@ fileInput.addEventListener("change", async () => {
   const formData = new FormData();
   formData.append("image", file);
 
-  const token = localStorage.getItem("token");
-
   try {
     const response = await fetch("/api/images", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: formData,
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.message || "이미지 업로드에 실패했습니다.");
+      await appAlert(data.message || "이미지 업로드에 실패했습니다.");
       return;
     }
 
-    uploadedImageUrl = data.image.url;
-
-    preview.src = uploadedImageUrl;
-    preview.hidden = false;
-    cameraIcon.hidden = true;
+    showImagePreview(data.image.url);
   } catch (error) {
     console.error("이미지 업로드 실패:", error);
-    alert("이미지 업로드 중 오류가 발생했습니다.");
+    await appAlert("이미지 업로드 중 오류가 발생했습니다.");
   }
 });
 
@@ -55,34 +50,22 @@ async function loadProductForEdit() {
     return;
   }
 
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    alert("로그인이 필요합니다.");
-    location.href = "./login.html";
-    return;
-  }
-
   try {
     const [productResponse, meResponse] = await Promise.all([
       fetch(`/api/products/${editId}`),
-      fetch("/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }),
+      fetch("/api/auth/me"),
     ]);
 
     const data = await productResponse.json();
     const meData = await meResponse.json();
 
     if (!productResponse.ok) {
-      alert(data.message || "상품 정보를 불러오지 못했습니다.");
+      await appAlert(data.message || "상품 정보를 불러오지 못했습니다.");
       return;
     }
 
     if (!meResponse.ok) {
-      alert(meData.message || "로그인이 필요합니다.");
+      await appAlert(meData.message || "로그인이 필요합니다.");
       location.href = "./login.html";
       return;
     }
@@ -92,7 +75,7 @@ async function loadProductForEdit() {
     const myId = meData.user?.id;
 
     if (String(sellerId) !== String(myId)) {
-      alert("본인 게시글만 수정할 수 있습니다.");
+      await appAlert("본인 게시글만 수정할 수 있습니다.");
       location.href = `./trade-post.html?id=${editId}`;
       return;
     }
@@ -103,14 +86,11 @@ async function loadProductForEdit() {
     document.querySelector("#write-place").value = product.location || "";
 
     if (product.thumbnail?.startsWith("http")) {
-      uploadedImageUrl = product.thumbnail;
-      preview.src = product.thumbnail;
-      preview.hidden = false;
-      cameraIcon.hidden = true;
+      showImagePreview(product.thumbnail);
     }
   } catch (error) {
     console.error("상품 정보를 못 가져왔어요:", error);
-    alert("상품 정보를 불러오는 중 오류가 발생했습니다.");
+    await appAlert("상품 정보를 불러오는 중 오류가 발생했습니다.");
   }
 }
 
@@ -126,11 +106,9 @@ document.querySelector(".btn-done").addEventListener("click", async () => {
   const location = document.querySelector("#write-place").value;
 
   if (!title || !price) {
-    alert("제목과 가격을 입력해주세요.");
+    await appAlert("제목과 가격을 입력해주세요.");
     return;
   }
-
-  const token = localStorage.getItem("token");
 
   const body = {
     title,
@@ -149,7 +127,6 @@ document.querySelector(".btn-done").addEventListener("click", async () => {
       method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     });
@@ -157,14 +134,14 @@ document.querySelector(".btn-done").addEventListener("click", async () => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.message || "저장에 실패했습니다.");
+      await appAlert(data.message || "저장에 실패했습니다.");
       return;
     }
 
     window.location.href = `trade-post.html?id=${data.product.id}`;
   } catch (error) {
     console.error("상품 저장 실패:", error);
-    alert("상품 저장 중 오류가 발생했습니다.");
+    await appAlert("상품 저장 중 오류가 발생했습니다.");
   }
 });
 

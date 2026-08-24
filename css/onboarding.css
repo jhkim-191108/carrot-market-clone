@@ -12,18 +12,24 @@
    ========================================================= */
 .hero {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    gap: 40px;
     max-width: 100%;
-    height: 727px;
+    min-height: 560px;
+    height: auto;
     margin: 0 auto;
-    padding: 100px 40px;
+    padding: 80px 40px;
     background: var(--yellow-200);
+    box-sizing: border-box;
 }
 
 /* 왼쪽 텍스트 영역 (타이틀 + 설명 + 버튼)  */
 .hero-text {
-    padding: 232px 214px 195px 200px;
+    padding: 0;
+    max-width: 480px;
+    min-width: 0;
 }
 
 /* 메인 타이틀 ("당신 근처의 지역 생활 커뮤니티") */
@@ -61,6 +67,19 @@
     cursor: pointer;
 
 }
+
+.btn-google,
+.btn-apps,
+.btn-primary {
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-google:hover,
+.btn-apps:hover,
+.btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
 .btn-google { padding: 18px 34px 18px 30px; }
 .btn-apps { padding: 18px 40px 18px 39px; }
 
@@ -72,8 +91,13 @@
 }
 
 /* 오른쪽 캐릭터 이미지 영역 */
-.hero-image { padding: 46px 120px 47px 0px; }
-.hero-image img { max-width: 510px; width: 100%; }
+.hero-image {
+    padding: 0;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+.hero-image img { max-width: 510px; width: 100%; height: auto; animation: float-y 4s ease-in-out infinite; }
 
 /* =========================================================
     동네 소개 섹션 공통 (우리 동네 중고 마켓 / 동네생활 / 동네가게)
@@ -88,11 +112,14 @@
 .town-shop,
 .town-life {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    gap: 40px;
     max-width: 100%;
     margin: 0 auto;
-    padding: 100px 40px;
+    padding: 80px 40px;
+    box-sizing: border-box;
 }
 
 /* 각 섹션의 제목(h2) 공통 스타일
@@ -116,9 +143,24 @@
 
 /* 각 섹션 이미지 크기 및 위치(여백)
    (.town-img = 마켓, .town-img2 = 동네생활, .town-img3 = 동네가게) */
-.town-img img { max-width: 533px; width: 100%; margin: 60px 84px 56px 199px; }
-.town-img2 img { max-width: 557px; width: 100%; margin: 51px 234px 0px 0px;}
-.town-img3 img { max-width: 526px; width: 100%; margin: 65px 156px 77px 261px;}
+.town-img,
+.town-img2,
+.town-img3,
+.town-text,
+.town-text2,
+.town-text3 {
+    min-width: 0;
+}
+
+.town-img img,
+.town-img2 img,
+.town-img3 img {
+    max-width: 533px;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    display: block;
+}
 
 
 /* 인기매물 보기 버튼 */
@@ -138,15 +180,16 @@
 /* ---------- 동네생활 섹션 전용 ---------- */
 .town-life { background: var(--green-200); }
 
-.town-text2 { padding: 234px 0px 219px 217px; }
+.town-text2 { padding: 0; max-width: 560px; }
 
 /* 아이콘 3개(동네질문/분실센터/모임) */
 .town-icons {
     display: flex;
-    gap: 49px;
+    flex-wrap: wrap;
+    gap: 24px 40px;
     list-style: none;
     padding: 0;
-    margin-top: 63px;
+    margin-top: 40px;
 }
 
 /* 아이콘 하나당 항목: 아이콘 위, 제목/설명 아래로 세로 배치  */
@@ -184,27 +227,48 @@
    ========================================================= */
 .pop-items {
     background: var(--gray-050);
-    padding: 100px 40px;
+    padding: 80px 40px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 /* "중고거래 인기매물" 섹션 제목 */
 .pop-title {
     font-size: 2.6rem;
     font-weight: 800;
-    padding: 112px 560px 64px 560px;
+    padding: 0 16px 48px;
+    margin: 0 auto;
+    max-width: 1000px;
+    word-break: keep-all;
 }
 
 /* 인기매물 카드. JS에서 상위 8개 채움 */
 .pop-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 40px;
     max-width: 1000px;
     margin: 0 auto;
     list-style: none;
     padding: 0;
     text-align: left;
+}
+
+.item-card {
+    min-width: 0;
+    animation: fade-up 0.4s ease both;
+}
+
+.item-card a {
+    display: block;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+}
+
+.item-card a:hover {
+    transform: translateY(-4px);
 }
 
 /* 상품 썸네일. 정사각형 + 위아래 radius, 사진은 박스에 꽉 채움 */
@@ -223,6 +287,11 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease;
+}
+
+.item-card a:hover .card-thumb img {
+    transform: scale(1.05);
 }
 
 /* 상품명/가격/위치/메타정보를 세로로 쌓는 텍스트 영역 */
@@ -254,24 +323,34 @@
     text-underline-offset: 4px;
     text-decoration-thickness: 1px;
     cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.pop-items-more:hover {
+    color: var(--orange-600);
+    transform: translateY(-1px);
 }
 
 /* =================================
     푸터 (하단 링크 + 앱 다운로드 영역)
    ================================= */
 .footer {
-    padding: 80px 120px;
-    height: 275px;
+    padding: 80px 40px;
+    height: auto;
     background: var(--orange-600);
     color: var(--gray-000);
+    box-sizing: border-box;
 }
 
 /* 좌(링크)/우(다운로드) 컨테이너 */
 .footer-box {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
-    max-width: 100%;
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 /* 왼쪽 텍스트 링크 목록 (이용약관, 개인정보처리방침 등) */
 .links {
@@ -314,35 +393,25 @@
 
 /* =========================================================
     반응형 (데스크톱 퍼스트 방식)
-    화면이 좁아질수록 1200px → 768px → 480px 순서로 겹쳐서 적용됨
+    화면이 좁아질수록 1200px → 1024px → 768px → 480px 순서로 겹쳐서 적용됨
    ========================================================= */
 
 /* ---------- 1200px 이하 (큰 태블릿/작은 데스크톱) ---------- */
 @media (max-width: 1200px) {
-    /* 히어로: 높이 고정 해제, 텍스트+이미지를 가운데로 모아서 배치 */
     .hero {
-        height: auto;
-        padding: 80px 40px;
-        justify-content: center;
-        gap: 60px;
-    }
-    .hero-text {
-        padding: 0;
-    }
-    .hero-image {
-        padding: 40px 24px 0 40px;
+        min-height: 0;
+        padding: 64px 32px;
+        gap: 32px;
     }
     .hero-image img {
         max-width: 400px;
     }
 
-    /*  히어로 버튼: 두 개가 항상 한 줄 유지되도록 하고
-        화면 폭에 따라 clamp()로 크기가 자연스럽게 줄어들게 함
-        (텍스트가 두 줄로 줄바꿈되는 것 방지) */
+    /* 히어로 버튼: 화면 폭에 따라 clamp()로 크기가 자연스럽게 줄어들게 함 */
     .hero-btn {
         display: flex;
-        flex-wrap: nowrap;
-        justify-content: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
         gap: 10px;
     }
     .hero-btn > * {
@@ -350,39 +419,66 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        flex: 1 1 0;
         min-width: 0;
         white-space: nowrap;
         padding: clamp(10px, 1.6vw, 18px) clamp(14px, 2.6vw, 34px);
         font-size: clamp(0.85rem, 1.4vw, 1.1rem);
     }
 
-    /* 동네소개 섹션들 */
     .town-market,
     .town-shop,
     .town-life {
-        gap: 40px;
-        padding: 80px 32px;
+        gap: 32px;
+        padding: 64px 32px;
     }
 
     .town-text h2, .town-text2 h2, .town-text3 h2 {
         font-size: 2rem;
     }
 
-    .town-img img,
-    .town-img2 img,
-    .town-img3 img { margin: 0 auto;}
-    .town-text2 { padding: 0;}
-
-    /* 인기매물 섹션; 그리드 4열 -> 3열 */
-    .pop-title { padding: 60px 24px 40px; }
+    .pop-title { padding: 0 16px 40px; }
     .pop-grid {
-        grid-template-columns: repeat(3, 1fr);
-        max-width: 100%;
         gap: 24px;
     }
-    /* 푸터 높이 고정 해제, 여백 축소 */
-    .footer { padding: 60px 40px; height: auto; }
+    .pop-items { padding: 64px 32px; }
+    .footer { padding: 60px 32px; }
+}
+
+/* ---------- 1024px 이하. 섹션을 세로로 쌓고 가운데 정렬 ---------- */
+@media (max-width: 1024px) {
+    .hero,
+    .town-market,
+    .town-life,
+    .town-shop {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 56px 24px;
+    }
+
+    .hero-text,
+    .town-text,
+    .town-text2,
+    .town-text3 {
+        max-width: 560px;
+    }
+
+    .hero-btn {
+        justify-content: center;
+    }
+
+    .town-market .town-img { order: 2; }
+    .town-market .town-text { order: 1; }
+
+    .town-icons {
+        justify-content: center;
+    }
+
+    .pop-items { padding: 56px 24px; }
+    .pop-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
 }
 
 /* ---------- 768px 이하 (태블릿 → 모바일 전환) ---------- */

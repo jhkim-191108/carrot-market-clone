@@ -169,7 +169,7 @@ function isSameArea(current, selected) {
 // ---------- 검색 결과 목록 렌더링 ----------
 function renderResults(list) {
     searchList = list; // 클릭 이벤트에서 index로 다시 찾기 위해 원본 저장
-    resultsEl.innerHTML = "";
+    resultsEl.replaceChildren();
     if (!list.length) {
         resultsEl.hidden = true;
         return;
@@ -384,16 +384,9 @@ function showMyLocation() {
     );
 }
 
-// 로그인 시 저장해둔 토큰을 Authorization 헤더에 실어서 반환하는 헬퍼
+// 요청 헤더. 로그인은 HttpOnly 쿠키로 서버가 붙임
 function authHeaders(extra = {}) {
-    const token = localStorage.getItem("token");
-    const headers = { ...extra };
-
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
-
-    return headers;
+    return { ...extra };
 }
 
 // 페이지 진입 시 초기 상태 표시 + GPS 위치 감지 시작

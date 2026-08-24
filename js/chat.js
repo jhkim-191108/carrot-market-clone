@@ -11,17 +11,24 @@ let myUserId = null;
 let currentRoomId = null;
 let allChatList = [];
 let partnerProfileImage = "";
+let currentProductId = null;
+let canChangeStatus = false;
+let chatSocket = null;
+let joinedRoomId = null;
+let pingTimer = null;
+let reconnectTimer = null;
+let reconnectTries = 0;
+let socketReadyOnce = false;
 
-// 로그인 토큰을 Authorization 헤더에 붙임
+const STATUS_LABEL = {
+    on_sale: "거래중",
+    reserved: "예약중",
+    sold: "거래완료",
+};
+
+// JSON 요청용. 로그인은 HttpOnly 쿠키로 서버가 붙임
 function authHeaders(extra = {}) {
-    const token = localStorage.getItem("token");
-    const headers = { ...extra };
-
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
-
-    return headers;
+    return { ...extra };
 }
 
 // 목록에 쓸 상대 시간
@@ -148,6 +155,22 @@ function renderRoomHeader(room) {
     document.querySelector(".chat-product-price").textContent = formatPrice(room.product.price);
     document.querySelector(".chat-product-status").textContent = room.product.statusLabel || "";
 
+    currentProductId = room.product?.id || room.productId || null;
+    const sellerId = room.sellerId ?? room.product?.seller?.id;
+    canChangeStatus = room.myRole === "seller" || (myUserId != null && sellerId != null && String(sellerId) === String(myUserId));
+
+    const statusBtn = document.querySelector("#chatProductStatus");
+    statusBtn.disabled = !canChangeStatus;
+    statusBtn.classList.toggle("is-editable", canChangeStatus);
+    closeStatusMenu();
+
+    const productLink = document.querySelector("#chatProductLink");
+    if (room.product?.id) {
+        productLink.href = `./trade-post.html?id=${room.product.id}`;
+    } else {
+        productLink.removeAttribute("href");
+    }
+
     const mannerTemp = room.product.seller?.mannerTemp;
     document.querySelector(".chat-manner-temp").textContent = mannerTemp ? `${mannerTemp}°C` : "";
 
@@ -188,6 +211,9 @@ function createMessageEl(message, grouped = false) {
     const isMine = Number(message.senderId) === Number(myUserId);
     const wrap = document.createElement("div");
     wrap.className = isMine ? "chat-message chat-message-sent" : "chat-message chat-message-received";
+    if (message.id != null) {
+        wrap.dataset.messageId = String(message.id);
+    }
 
     if (grouped) {
         wrap.classList.add("is-grouped");
@@ -263,13 +289,192 @@ async function fetchChatList() {
     renderChatList();
 }
 
+function chatSocketUrl() {
+    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${location.host}/ws`;
+}
+
+function wsSend(payload) {
+    if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+        return false;
+    }
+
+    chatSocket.send(JSON.stringify(payload));
+    return true;
+}
+
+function joinRoomSocket(roomId) {
+    if (!roomId) {
+        return;
+    }
+
+    const nextId = Number(roomId);
+
+    if (joinedRoomId && Number(joinedRoomId) !== nextId) {
+        wsSend({ type: "leave", roomId: Number(joinedRoomId) });
+    }
+
+    joinedRoomId = nextId;
+    wsSend({ type: "join", roomId: nextId });
+    wsSend({ type: "read", roomId: nextId });
+}
+
+function leaveRoomSocket(roomId) {
+    if (!roomId) {
+        return;
+    }
+
+    wsSend({ type: "leave", roomId: Number(roomId) });
+
+    if (Number(joinedRoomId) === Number(roomId)) {
+        joinedRoomId = null;
+    }
+}
+
+function updateListPreview(roomId, message, increaseUnread) {
+    const cached = allChatList.find((chat) => Number(chat.id) === Number(roomId));
+    if (!cached || !message) {
+        return;
+    }
+
+    cached.lastMessage = message.content || cached.lastMessage;
+    cached.time = formatTime(message.createdAt);
+    cached.unreadCount = increaseUnread ? (cached.unreadCount || 0) + 1 : 0;
+    renderChatList();
+}
+
+function appendLiveMessage(message) {
+    if (!message) {
+        return;
+    }
+
+    if (message.id != null) {
+        const exists = chatMessageAreaEl.querySelector(`[data-message-id="${message.id}"]`);
+        if (exists) {
+            return;
+        }
+    }
+
+    const last = chatMessageAreaEl.lastElementChild;
+    const grouped = Boolean(last) && (
+        Number(message.senderId) === Number(myUserId)
+            ? last.classList.contains("chat-message-sent")
+            : last.classList.contains("chat-message-received")
+    );
+
+    chatMessageAreaEl.append(createMessageEl(message, grouped));
+    chatMessageAreaEl.scrollTop = chatMessageAreaEl.scrollHeight;
+}
+
+function handleSocketEvent(data) {
+    if (!data || !data.type) {
+        return;
+    }
+
+    if (data.type === "message") {
+        const roomId = data.roomId ?? data.message?.roomId ?? joinedRoomId;
+        const isOpen = Number(roomId) === Number(currentRoomId);
+
+        if (isOpen) {
+            appendLiveMessage(data.message);
+            updateListPreview(roomId, data.message, false);
+            if (Number(data.message?.senderId) !== Number(myUserId)) {
+                wsSend({ type: "read", roomId: Number(roomId) });
+            }
+            return;
+        }
+
+        updateListPreview(roomId, data.message, Number(data.message?.senderId) !== Number(myUserId));
+        return;
+    }
+
+    if (data.type === "notification") {
+        const roomId = data.roomId ?? data.message?.roomId;
+        const isOpen = Number(roomId) === Number(currentRoomId);
+        updateListPreview(roomId, data.message, !isOpen && Number(data.message?.senderId) !== Number(myUserId));
+        return;
+    }
+
+    if (data.type === "error") {
+        console.error(data.message || data.code);
+    }
+}
+
+function stopPing() {
+    if (pingTimer) {
+        clearInterval(pingTimer);
+        pingTimer = null;
+    }
+}
+
+function connectChatSocket() {
+    if (!myUserId) {
+        return;
+    }
+
+    if (chatSocket && (chatSocket.readyState === WebSocket.OPEN || chatSocket.readyState === WebSocket.CONNECTING)) {
+        return;
+    }
+
+    chatSocket = new WebSocket(chatSocketUrl());
+
+    chatSocket.addEventListener("open", () => {
+        reconnectTries = 0;
+        socketReadyOnce = true;
+        stopPing();
+        pingTimer = setInterval(() => {
+            wsSend({ type: "ping" });
+        }, 20000);
+
+        if (currentRoomId) {
+            joinRoomSocket(currentRoomId);
+        }
+    });
+
+    chatSocket.addEventListener("message", (event) => {
+        try {
+            handleSocketEvent(JSON.parse(event.data));
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    chatSocket.addEventListener("close", () => {
+        stopPing();
+        joinedRoomId = null;
+        chatSocket = null;
+
+        if (reconnectTimer) {
+            return;
+        }
+
+        reconnectTries += 1;
+        if (!socketReadyOnce && reconnectTries > 3) {
+            return;
+        }
+
+        reconnectTimer = setTimeout(() => {
+            reconnectTimer = null;
+            connectChatSocket();
+        }, 3000);
+    });
+
+    chatSocket.addEventListener("error", () => {
+        if (chatSocket) {
+            chatSocket.close();
+        }
+    });
+}
+
 // 방 헤더는 목록 응답을 재사용하고, 메시지 API만 추가로 호출
 async function openChatRoom(roomId) {
     currentRoomId = roomId;
 
     const cached = allChatList.find((chat) => Number(chat.id) === Number(roomId));
-    if (cached?.room) {
-        renderRoomHeader(cached.room);
+    const room = cached?.room;
+
+    if (room) {
+        renderRoomHeader(room);
     }
 
     const messagesResponse = await fetch(`/api/chats/${roomId}/messages`, {
@@ -278,7 +483,7 @@ async function openChatRoom(roomId) {
 
     if (!messagesResponse.ok) {
         const data = await messagesResponse.json();
-        alert(data.message || "채팅방을 불러오지 못했습니다.");
+        await appAlert(data.message || "채팅방을 불러오지 못했습니다.");
         return;
     }
 
@@ -296,6 +501,7 @@ async function openChatRoom(roomId) {
     // 모바일에서 대화 화면 열기
     document.querySelector(".chat-content").classList.add("is-room-open");
     renderChatList();
+    joinRoomSocket(roomId);
 }
 
 // 채팅방 화면 비우기
@@ -309,6 +515,10 @@ function clearRoomView() {
     document.querySelector(".chat-product-price").textContent = "";
     document.querySelector(".chat-product-status").textContent = "";
     document.querySelector(".chat-product-thumb").style.backgroundImage = "";
+    document.querySelector("#chatProductLink").removeAttribute("href");
+    currentProductId = null;
+    canChangeStatus = false;
+    closeStatusMenu();
     chatMessageAreaEl.replaceChildren();
     closeChatMenu();
 }
@@ -316,16 +526,17 @@ function clearRoomView() {
 // DELETE로 방 나간 뒤 목록으로
 async function leaveChatRoom() {
     if (!currentRoomId) {
-        alert("나갈 채팅방을 먼저 선택해주세요.");
+        await appAlert("나갈 채팅방을 먼저 선택해주세요.");
         return;
     }
 
-    const confirmed = confirm("채팅방에서 나가시겠습니까?");
+    const confirmed = await appConfirm("채팅방에서 나가시겠습니까?");
     if (!confirmed) {
         return;
     }
 
     const roomId = currentRoomId;
+    leaveRoomSocket(roomId);
     const response = await fetch(`/api/chats/${roomId}`, {
         method: "DELETE",
         headers: authHeaders(),
@@ -334,7 +545,8 @@ async function leaveChatRoom() {
     const data = await response.json();
 
     if (!response.ok) {
-        alert(data.message || "채팅방 나가기에 실패했습니다.");
+        joinRoomSocket(roomId);
+        await appAlert(data.message || "채팅방 나가기에 실패했습니다.");
         return;
     }
 
@@ -348,7 +560,7 @@ async function leaveChatRoom() {
 // 메시지 보내기
 async function sendMessage(content) {
     if (!currentRoomId) {
-        alert("채팅방을 먼저 선택해주세요.");
+        await appAlert("채팅방을 먼저 선택해주세요.");
         return;
     }
 
@@ -363,14 +575,11 @@ async function sendMessage(content) {
     const data = await response.json();
 
     if (!response.ok) {
-        alert(data.message || "메시지를 보내지 못했습니다.");
+        await appAlert(data.message || "메시지를 보내지 못했습니다.");
         return;
     }
 
-    const last = chatMessageAreaEl.lastElementChild;
-    const grouped = Boolean(last) && last.classList.contains("chat-message-sent");
-    chatMessageAreaEl.append(createMessageEl(data.message, grouped));
-    chatMessageAreaEl.scrollTop = chatMessageAreaEl.scrollHeight;
+    appendLiveMessage(data.message);
 
     const cached = allChatList.find((chat) => Number(chat.id) === Number(currentRoomId));
     if (cached) {
@@ -433,6 +642,7 @@ document.querySelector("#chatLeaveBtn").addEventListener("click", async () => {
 // 목록으로
 document.querySelector("#chatBackBtn").addEventListener("click", () => {
     closeChatMenu();
+    leaveRoomSocket(currentRoomId);
     document.querySelector(".chat-content").classList.remove("is-room-open");
 });
 
@@ -441,11 +651,99 @@ document.querySelector("#unreadToggle").addEventListener("change", () => {
     renderChatList();
 });
 
+function closeStatusMenu() {
+    const menu = document.querySelector("#chatStatusMenu");
+    if (menu) {
+        menu.hidden = true;
+    }
+}
+
+// 내 상품이면 PATCH /api/products/:id/status
+async function changeProductStatus(status) {
+    if (!currentProductId) {
+        await appAlert("상품 정보를 찾을 수 없습니다.");
+        return;
+    }
+
+    if (!canChangeStatus) {
+        await appAlert("판매자만 거래 상태를 바꿀 수 있습니다.");
+        return;
+    }
+
+    const response = await fetch(`/api/products/${currentProductId}/status`, {
+        method: "PATCH",
+        headers: authHeaders({
+            "Content-Type": "application/json",
+        }),
+        body: JSON.stringify({ status }),
+    });
+
+    let data = {};
+    try {
+        data = await response.json();
+    } catch (error) {
+        console.error(error);
+    }
+
+    if (!response.ok) {
+        await appAlert(data.message || data.error || "거래 상태를 바꾸지 못했습니다.");
+        return;
+    }
+
+    const label = data.product?.statusLabel || STATUS_LABEL[status];
+    document.querySelector("#chatProductStatus").textContent = label;
+
+    const cached = allChatList.find((chat) => Number(chat.id) === Number(currentRoomId));
+    if (cached?.room?.product) {
+        cached.room.product.status = data.product?.status || status;
+        cached.room.product.statusLabel = label;
+    }
+}
+
+document.querySelector("#chatProductStatus").addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!canChangeStatus) {
+        return;
+    }
+
+    const menu = document.querySelector("#chatStatusMenu");
+    menu.hidden = !menu.hidden;
+});
+
+document.querySelector("#chatStatusMenu").addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-status]");
+    if (!button) {
+        return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    closeStatusMenu();
+
+    try {
+        await changeProductStatus(button.dataset.status);
+    } catch (error) {
+        console.error(error);
+        await appAlert("거래 상태를 바꾸지 못했습니다.");
+    }
+});
+
+document.addEventListener("click", (event) => {
+    const wrap = document.querySelector(".chat-product-status-wrap");
+    if (!wrap || wrap.contains(event.target)) {
+        return;
+    }
+    closeStatusMenu();
+});
+
 // 시작
 async function initChat() {
     try {
         await fetchMe();
         await fetchChatList();
+        connectChatSocket();
 
         // 주소에 ?id= 있으면 그 방 열기
         const roomId = new URLSearchParams(window.location.search).get("id");

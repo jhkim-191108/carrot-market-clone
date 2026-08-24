@@ -10,8 +10,8 @@ const moreBtn = document.querySelector(".pop-items-more"); // "더 보기" 버�
 // 인기매물 상위 8개 가져오기
 async function loadPopularProducts() {
     try {
-        // 1페이지 상품 목록을 요청 (여기서는 최신/인기 목록 중 앞부분만 사용)
-        const response = await fetch("/api/products?page=1");
+        // 조회수 많은 순으로 8개
+        const response = await fetch("/api/products?sort=views&page=1&limit=8");
         const data = await response.json();
 
         if (!response.ok) {
@@ -20,52 +20,50 @@ async function loadPopularProducts() {
             );
         }
 
-        // 상위 8개만 가져오기 (홈 화면 그리드에 맞춰 개수 제한)
-        const products = data.items.slice(0, 8);
+        const products = data.items || [];
 
         // 기존 예시 카드 삭제 (HTML에 미리 넣어둔 더미 카드가 있다면 여기서 지워짐)
-        listEl.innerHTML = "";
+        listEl.replaceChildren();
 
         products.forEach((product) => {
             const li = document.createElement("li");
             li.className = "item-card";
 
-            // 카드 하나를 통째로 innerHTML로 생성
-            // (썸네일 없는 상품 대비: thumbnail이 http로 시작하는 URL일 때만 <img> 렌더링)
-            li.innerHTML = `
-                <a href="./trade-post.html?id=${product.id}">
-                    <div class="card-thumb">
-                        ${
-                            product.thumbnail?.startsWith("http")
-                                ? `<img
-                                    src="${product.thumbnail}"
-                                    alt="${product.title}"
-                                >`
-                                : ""
-                        }
-                    </div>
+            const link = document.createElement("a");
+            link.href = `./trade-post.html?id=${encodeURIComponent(product.id)}`;
 
-                    <div class="card-text">
-                        <p class="card-name">
-                            ${product.title}
-                        </p>
+            const thumb = document.createElement("div");
+            thumb.className = "card-thumb";
+            if (product.thumbnail?.startsWith("http")) {
+                const img = document.createElement("img");
+                img.src = product.thumbnail;
+                img.alt = product.title || "";
+                thumb.append(img);
+            }
 
-                        <p class="card-price">
-                            ${product.price.toLocaleString()}원
-                        </p>
+            const textBox = document.createElement("div");
+            textBox.className = "card-text";
 
-                        <p class="card-location">
-                            ${product.location}
-                        </p>
+            const name = document.createElement("p");
+            name.className = "card-name";
+            name.textContent = product.title || "";
 
-                        <p class="card-meta">
-                            조회 ${product.viewCount} · 채팅 ${product.chatCount}
-                        </p>
-                    </div>
-                </a>
-            `;
+            const price = document.createElement("p");
+            price.className = "card-price";
+            price.textContent = `${Number(product.price).toLocaleString()}원`;
 
-            listEl.appendChild(li);
+            const location = document.createElement("p");
+            location.className = "card-location";
+            location.textContent = product.location || "";
+
+            const meta = document.createElement("p");
+            meta.className = "card-meta";
+            meta.textContent = `조회 ${product.viewCount} · 채팅 ${product.chatCount}`;
+
+            textBox.append(name, price, location, meta);
+            link.append(thumb, textBox);
+            li.append(link);
+            listEl.append(li);
         });
     } catch (error) {
         // 네트워크 오류 등으로 못 불러와도 페이지 자체는 그대로 유지 (콘솔에만 기록)

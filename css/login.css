@@ -84,6 +84,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.register-btn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
 }
 
 /* 회원가입 페이지로 가는 안내 */

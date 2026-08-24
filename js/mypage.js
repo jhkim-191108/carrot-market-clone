@@ -1,16 +1,9 @@
 // 마이페이지. 내 정보 조회/수정, 프로필 사진은 파일 업로드
 let profileImageUrl = "";
 
-// 로그인 토큰을 Authorization 헤더에 붙임
+// JSON 요청용. 로그인은 HttpOnly 쿠키로 서버가 붙임
 function authHeaders(extra = {}) {
-    const token = localStorage.getItem("token");
-    const headers = { ...extra };
-
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
-
-    return headers;
+    return { ...extra };
 }
 
 // 가입일 포맷
@@ -51,14 +44,6 @@ function renderUser(user) {
 
 // GET /api/auth/me. 없으면 로그인으로
 async function fetchMe() {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        alert("로그인이 필요합니다.");
-        location.href = "./login.html";
-        return;
-    }
-
     try {
         const response = await fetch("/api/auth/me", {
             headers: authHeaders(),
@@ -67,7 +52,7 @@ async function fetchMe() {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || "회원 정보를 불러오지 못했습니다.");
+            await appAlert(data.message || "로그인이 필요합니다.");
             location.href = "./login.html";
             return;
         }
@@ -92,12 +77,12 @@ async function updateMe(userData) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || "정보 수정에 실패했습니다.");
+            await appAlert(data.message || "정보 수정에 실패했습니다.");
             return;
         }
 
         renderUser(data.user);
-        alert("정보가 수정되었습니다.");
+        await appAlert("정보가 수정되었습니다.");
     } catch (error) {
         console.error(error);
     }
@@ -137,7 +122,7 @@ document.querySelector("#profileImageFile").addEventListener("change", async (ev
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || "이미지 업로드에 실패했습니다.");
+            await appAlert(data.message || "이미지 업로드에 실패했습니다.");
             return;
         }
 
@@ -145,7 +130,7 @@ document.querySelector("#profileImageFile").addEventListener("change", async (ev
         document.querySelector("#profileImage").style.backgroundImage = `url("${profileImageUrl}")`;
     } catch (error) {
         console.error("이미지 업로드 실패:", error);
-        alert("이미지 업로드 중 오류가 발생했습니다.");
+        await appAlert("이미지 업로드 중 오류가 발생했습니다.");
     }
 });
 

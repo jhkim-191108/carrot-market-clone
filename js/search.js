@@ -18,19 +18,7 @@ if (searchInput) {
 // 검색어를 받아서 상품을 요청하는 함수만들기
 async function getProducts(keyword, page = 1) {
     try{
-        // 1. 로그인 토큰 가져오기
-        const token = localStorage.getItem("token");
-        // 헤더를 담을 빈 상자를 만들어 줌
-        const headers = {};
-        // 토큰이 있을때만 인증 헤더를 넣음
-        if (token !== null) {
-            headers.Authorization = `Bearer ${token}`;
-        }
-        // fetch() 에서는 위로 headers를 넘겨준다
-        const response = await fetch(`/api/products?q=${encodeURIComponent(keyword)}&page=${page}&limit=8`, {
-            headers: headers
-        }
-    );
+        const response = await fetch(`/api/products?q=${encodeURIComponent(keyword)}&page=${page}&limit=8`);
         // 에러 확인
         if(!response.ok) throw new Error(response.status);
     // j.som형식으로 데이터 받기
@@ -85,20 +73,48 @@ function renderProducts(products) {
         // 위에 선언한 card에 클래스추가
         card.classList.add("mainGridCardBox");
 
-        // article안에 들어갈 속성들 innerHTML로 추가
-        card.innerHTML = `
-            <img src="${product.thumbnail}" alt="${product.title}" class="productImg">
-            <div class="productInfo">
-                <h3 class="productName">${product.title}</h3>
-                <p class="productPrice">${product.price.toLocaleString()}원</p>
-                <p class="productAddress">${product.location}</p>
-            </div>
-            <div class="productMeta">
-                <span class="meta">조회 ${product.viewCount}</span>
-                <span class="meta">•</span>
-                <span class="meta">채팅 ${product.chatCount}</span>
-            </div>
-    `;
+        if (product.thumbnail?.startsWith("http")) {
+            const img = document.createElement("img");
+            img.src = product.thumbnail;
+            img.alt = product.title || "";
+            img.className = "productImg";
+            card.append(img);
+        }
+
+        const info = document.createElement("div");
+        info.className = "productInfo";
+
+        const name = document.createElement("h3");
+        name.className = "productName";
+        name.textContent = product.title || "";
+
+        const price = document.createElement("p");
+        price.className = "productPrice";
+        price.textContent = `${Number(product.price).toLocaleString()}원`;
+
+        const address = document.createElement("p");
+        address.className = "productAddress";
+        address.textContent = product.location || "";
+
+        info.append(name, price, address);
+
+        const metaBox = document.createElement("div");
+        metaBox.className = "productMeta";
+
+        const viewMeta = document.createElement("span");
+        viewMeta.className = "meta";
+        viewMeta.textContent = `조회 ${product.viewCount}`;
+
+        const dotMeta = document.createElement("span");
+        dotMeta.className = "meta";
+        dotMeta.textContent = "•";
+
+        const chatMeta = document.createElement("span");
+        chatMeta.className = "meta";
+        chatMeta.textContent = `채팅 ${product.chatCount}`;
+
+        metaBox.append(viewMeta, dotMeta, chatMeta);
+        card.append(info, metaBox);
     // 상품 클릭처리
     card.addEventListener("click", function () {
         console.log("카드 클릭됨", product.id);

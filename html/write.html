@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="../css/common.css" />
     <link rel="stylesheet" href="../css/reset.css" />
     <link rel="stylesheet" href="../css/write.css" />
-    <link rel="stylesheet" href="../css/trade-post.css" />
     <link rel="stylesheet" href="../css/header.css" />
   </head>
   <body>
@@ -85,15 +84,17 @@
           <!-- 콘텐츠 - 이미지 + 제목 + 가격 -->
           <div class="write-box-1">
             <!-- 사진. 클릭하면 파일 선택 후 서버 업로드 -->
-            <div class="img-box">
-              <img
-                class="icon-camera"
-                src="../images/write-add-img.png"
-                alt="카메라 아이콘"
-              />
+            <label class="img-box" for="write-image">
+              <span class="icon-camera" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 7.5h1.2l.8-1.2A1.5 1.5 0 0 1 12.25 5.5h0.5A1.5 1.5 0 0 1 14 6.3l.8 1.2H16.5A2.5 2.5 0 0 1 19 10v6.5A2.5 2.5 0 0 1 16.5 19h-9A2.5 2.5 0 0 1 5 16.5V10A2.5 2.5 0 0 1 7.5 7.5H9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                  <circle cx="12" cy="13" r="2.6" stroke="currentColor" stroke-width="1.6"/>
+                </svg>
+              </span>
+              <span class="img-count">0/1</span>
               <input type="file" id="write-image" accept="image/*" hidden />
-              <img class="preview" src="../images/write-add-img.png" alt="" hidden>
-            </div>
+              <img class="preview" alt="선택한 사진" hidden>
+            </label>
             <!-- 글 정보 -->
             <div class="write-info">
               <!-- 글 제목 -->
@@ -156,6 +157,7 @@
         </article>
       </div>
     </main>
+    <script src="../js/modal.js"></script>
     <script src="../js/write.js"></script>
     <script src="../js/header.js"></script>
   </body>

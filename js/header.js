@@ -13,8 +13,9 @@ const searchTextArea = document.querySelector("#searchTextArea");
 const searchToggle = document.querySelector("#searchToggle");
 const searchWrap = document.querySelector(".searchWrap");
 const upperBar = document.querySelector(".upperBar");
+const footerChatLink = document.querySelector("#footerChatLink");
 
-const token = localStorage.getItem("token");
+localStorage.removeItem("token");
 
 // 작은 화면에서 연 검색창 닫기
 function closeSearchMenu() {
@@ -38,6 +39,9 @@ function headerStatus(isLoggedIn) {
     if (locationNav) {
         locationNav.hidden = !isLoggedIn;
     }
+    if (footerChatLink) {
+        footerChatLink.hidden = !isLoggedIn;
+    }
     if (upperBar) {
         upperBar.classList.toggle("is-logged-in", isLoggedIn);
     }
@@ -46,10 +50,27 @@ function headerStatus(isLoggedIn) {
     }
 }
 
-headerStatus(token !== null);
+headerStatus(false);
 
-// 토큰 지우고 홈으로
-function logout() {
+async function syncHeaderAuth() {
+    try {
+        const response = await fetch("/api/auth/me");
+        headerStatus(response.ok);
+    } catch (error) {
+        headerStatus(false);
+    }
+}
+
+syncHeaderAuth();
+
+// 쿠키 지우고 홈으로
+async function logout() {
+    try {
+        await fetch("/api/auth/logout", { method: "POST" });
+    } catch (error) {
+        console.error(error);
+    }
+
     localStorage.removeItem("token");
     headerStatus(false);
     location.href = "./onboarding.html";

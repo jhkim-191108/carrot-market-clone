@@ -162,6 +162,7 @@ body {
     padding: 16px 20px;
     border-bottom: 1px solid var(--gray-200);
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 .chat-room-item.is-active {
@@ -242,6 +243,33 @@ body {
     flex-direction: column;
     background-color: var(--gray-000);
     position: relative;
+}
+
+.chat-empty {
+    display: none;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+}
+
+.chat-empty p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--gray-400);
+}
+
+.chat-content:not(.is-room-open) .chat-empty {
+    display: flex;
+}
+
+.chat-content:not(.is-room-open) .chat-room-header,
+.chat-content:not(.is-room-open) .chat-product-row,
+.chat-content:not(.is-room-open) .chat-message-area,
+.chat-content:not(.is-room-open) .chat-input-area {
+    display: none;
 }
 
 /* 상대 닉네임, 매너온도, ... 메뉴 */
@@ -332,14 +360,30 @@ body {
     justify-content: center;
 }
 
-/* 이 채팅이 연결된 상품 정보 */
+/* 상품 줄. 왼쪽 상세 링크, 오른쪽 거래 상태 */
+.chat-product-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px 14px;
+    border-bottom: 1px solid var(--gray-100);
+    flex-shrink: 0;
+    overflow: visible;
+}
+
 .chat-product-bar {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 20px 14px;
-    border-bottom: 1px solid var(--gray-100);
-    flex-shrink: 0;
+    min-width: 0;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.chat-product-bar:hover {
+    opacity: 0.85;
 }
 
 .chat-product-thumb {
@@ -354,30 +398,81 @@ body {
     min-width: 0;
 }
 
-.chat-product-title-row {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    min-width: 0;
-}
-
-.chat-product-status {
-    flex-shrink: 0;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--gray-900);
-}
-
-.chat-product-status:empty {
-    display: none;
-}
-
 .chat-product-title {
     font-size: 0.875rem;
     color: var(--gray-900);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.chat-product-status {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: inherit;
+    color: var(--gray-900);
+    white-space: nowrap;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    cursor: default;
+}
+
+.chat-product-status.is-editable {
+    cursor: pointer;
+}
+
+.chat-product-status.is-editable:hover {
+    background-color: var(--gray-050);
+}
+
+.chat-product-status-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.chat-status-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 15;
+    min-width: 112px;
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    background-color: var(--gray-000);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(17, 17, 17, 0.12);
+}
+
+.chat-status-menu:not([hidden]) {
+    display: block;
+}
+
+.chat-status-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    color: var(--gray-800);
+    text-align: left;
+    cursor: pointer;
+}
+
+.chat-status-menu button:hover {
+    background-color: var(--gray-050);
+    color: var(--orange-600);
+}
+
+.chat-product-status:empty {
+    display: none;
 }
 
 .chat-product-price {
@@ -402,6 +497,7 @@ body {
     display: flex;
     align-items: flex-end;
     gap: 6px;
+    animation: fade-up 0.2s ease;
 }
 
 .chat-message.is-grouped {
@@ -657,7 +753,7 @@ body {
     }
 
     .chat-room-header,
-    .chat-product-bar {
+    .chat-product-row {
         padding-left: 12px;
         padding-right: 12px;
     }
@@ -671,7 +767,7 @@ body {
         font-size: 1rem;
     }
 
-    .chat-product-bar {
+    .chat-product-row {
         padding-top: 10px;
         padding-bottom: 12px;
     }

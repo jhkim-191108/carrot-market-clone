@@ -1,4 +1,4 @@
-// 로그인. 아이디 칸 값을 API email로 보내고, 성공하면 토큰 저장
+// 로그인. 아이디 칸 값을 API email로 보내고, 성공하면 서버가 쿠키에 토큰 저장
 const loginForm = document.querySelector("#loginForm");
 
 // 로그인 제출
@@ -28,16 +28,14 @@ async function loginUser(userData) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || "로그인에 실패했습니다.");
+            await appAlert(data.message || "로그인에 실패했습니다.");
             return;
         }
 
-        // 이후 API 호출에 쓰는 토큰
-        localStorage.setItem("token", data.token);
-        alert("로그인되었습니다.");
+        await appAlert("로그인되었습니다.");
         location.href = "./onboarding.html";
     } catch (error) {
         console.error("로그인 요청 실패:", error);
-        alert("서버와 통신할 수 없습니다.");
+        await appAlert("서버와 통신할 수 없습니다.");
     }
 }

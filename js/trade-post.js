@@ -1,7 +1,6 @@
 // 상품 상세. 본인 글이면 수정/삭제, 채팅하기는 방 만들고 이동
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
-const token = localStorage.getItem("token");
 
 let sellerId = null;
 let currentUserId = null;
@@ -29,8 +28,14 @@ async function getProduct() {
     document.querySelector(".view-num").textContent = product.viewCount;
     document.querySelector(".chat-num").textContent = product.chatCount;
 
-    document.querySelector(".post-text").innerHTML =
-      product.description.replace(/\n/g, "<br>");
+    const postText = document.querySelector(".post-text");
+    postText.replaceChildren();
+    String(product.description || "").split("\n").forEach((line, index, lines) => {
+      postText.append(document.createTextNode(line));
+      if (index < lines.length - 1) {
+        postText.append(document.createElement("br"));
+      }
+    });
 
     document.querySelector(".place-text").textContent = product.location;
 
@@ -60,16 +65,12 @@ async function getProduct() {
 // 로그인한 사람이 판매자면 수정/삭제 버튼 보여줌
 async function checkOwner() {
   try {
-    if (!token || !sellerId) {
+    if (!sellerId) {
       document.querySelector(".post-btn-box").hidden = true;
       return;
     }
 
-    const res = await fetch("/api/auth/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await fetch("/api/auth/me");
 
     const data = await res.json();
 
@@ -103,18 +104,11 @@ document.querySelector(".btn-back").addEventListener("click", () => {
 
 // POST /api/chats 후 chat.html?id= 로 이동. 비로그인이면 로그인 페이지로
 document.querySelector(".btn-chat").addEventListener("click", async () => {
-  if (!token) {
-    alert("로그인이 필요합니다.");
-    window.location.href = "./login.html";
-    return;
-  }
-
   try {
     const res = await fetch("/api/chats", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         productId: Number(productId),
@@ -122,6 +116,12 @@ document.querySelector(".btn-chat").addEventListener("click", async () => {
     });
 
     const data = await res.json();
+
+    if (res.status === 401) {
+      await appAlert("로그인이 필요합니다.");
+      window.location.href = "./login.html";
+      return;
+    }
 
     if (!res.ok) {
       throw new Error(
@@ -148,26 +148,23 @@ document.querySelector(".btn-chat").addEventListener("click", async () => {
 
 // DELETE /api/products/:id 후 목록으로
 document.querySelector(".btn-delete").addEventListener("click", async () => {
-  if (!confirm("이 게시글을 삭제할까요?")) {
+  if (!(await appConfirm("이 게시글을 삭제할까요?"))) {
     return;
   }
 
   try {
     const res = await fetch(`/api/products/${productId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.message || "삭제에 실패했습니다.");
+      await appAlert(data.message || "삭제에 실패했습니다.");
       return;
     }
 
-    alert(data.message || "삭제되었습니다.");
+    await appAlert(data.message || "삭제되었습니다.");
     window.location.href = "trade.html";
 
   } catch (err) {
@@ -177,9 +174,9 @@ document.querySelector(".btn-delete").addEventListener("click", async () => {
 
 
 // 본인 글만 write.html?id= 로 보냄
-document.querySelector(".btn-edit").addEventListener("click", () => {
-  if (!token || String(currentUserId) !== String(sellerId)) {
-    alert("본인 게시글만 수정할 수 있습니다.");
+document.querySelector(".btn-edit").addEventListener("click", async () => {
+  if (!currentUserId || String(currentUserId) !== String(sellerId)) {
+    await appAlert("본인 게시글만 수정할 수 있습니다.");
     return;
   }
 
