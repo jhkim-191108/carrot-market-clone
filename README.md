@@ -24,7 +24,6 @@ GitHub로 기능을 나눠 개발하면서 공통 헤더, 인증 쿠키, 반응�
 | Realtime | WebSocket (`ws`) |
 | Auth | HttpOnly 쿠키 (`authToken`), `SameSite=Lax` |
 | API | 당근 클론 API, Nominatim (OpenStreetMap) |
-| Deploy | Vercel |
 
 - `fetch` + `async/await`로 REST 통신
 - 채팅은 REST로 전송하고, 수신은 WebSocket으로 실시간 반영
@@ -99,7 +98,6 @@ carrot-market-clone/
 ├── css/               # 페이지별 스타일 + common / reset / header
 ├── js/                # 페이지별 스크립트 + header.js, modal.js
 ├── images/
-└── vercel.json
 ```
 
 ## 실행 방법
