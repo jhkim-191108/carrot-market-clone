@@ -4,6 +4,7 @@ Figma 시안을 바탕으로 HTML, CSS, JavaScript로 UI를 구현하고, 제공
 
 4인 팀 프로젝트이며, 이 저장소에서는 **로그인 / 회원가입 / 마이페이지 / 채팅**을 담당했습니다.
 
+- **배포**: [https://f1-carrot.kro.kr](https://f1-carrot.kro.kr/)
 - **저장소**: [github.com/jhkim-191108/carrot-market-clone](https://github.com/jhkim-191108/carrot-market-clone)
 - **개발 기간**: 2026.08.13 ~ 2026.08.25
 - **인원**: 4명 (팀장: 김지훈)
