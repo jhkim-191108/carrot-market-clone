@@ -276,6 +276,7 @@ setBtn.addEventListener("click", async () => {
     isCertified = false;
     resultsEl.hidden = true;
     renderState();
+    await appAlert("내 동네 설정이 완료되었습니다.");
 });
 
 // "동네인증 완료하기" 버튼: 설정해 둔 내 동네를 마이페이지에 저장
@@ -315,6 +316,7 @@ confirmBtn.addEventListener("click", async () => {
         console.log("동네 저장 완료:", data.user.location);
         isCertified = true;
         renderState();
+        await appAlert("동네인증이 완료되었습니다. 마이페이지에서 지역을 확인하세요");
 
     } catch (error) {
         console.error("동네 저장 실패:", error);

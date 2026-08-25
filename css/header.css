@@ -27,9 +27,9 @@ body {
 }
 
 .upperLogo{
-    width: 71px;
+    width: auto;
     height: 34px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .upperLeftText {
@@ -124,6 +124,7 @@ body {
     background-color: var(--gray-100);
     width: 100%;
     max-width: 288px;
+    min-width: 0;
     height: 39px;
     border-style: none;
     padding: 7px 10px;
@@ -327,6 +328,8 @@ body {
     .searchWrap {
         max-width: none;
         flex: 0 0 auto;
+        /* 검색창을 돋보기가 아니라 헤더 전체 기준으로 펼침 */
+        position: static;
     }
 
     /* 공간은 충분하지만 화면이 작아지니까 글자크기 0.1rem줄임 */
@@ -337,10 +340,12 @@ body {
     /* 돋보기만 두고, 검색창은 헤더 아래에 펼침 */
     #searchToggle {
         display: inline-flex;
+        flex-shrink: 0;
     }
 
     #searchForm {
         display: none;
+        width: auto;
     }
 
     .searchWrap.is-open #searchForm {
@@ -349,11 +354,15 @@ body {
         left: 12px;
         right: 12px;
         top: calc(100% + 8px);
+        width: auto;
+        max-width: none;
         z-index: 1100;
     }
 
     .searchWrap.is-open #searchTextArea {
         width: 100%;
+        max-width: none;
+        min-width: 0;
         box-shadow: 0 4px 12px rgba(17, 17, 17, 0.12);
     }
 

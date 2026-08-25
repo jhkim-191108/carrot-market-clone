@@ -43,6 +43,11 @@
   gap: 24px;
 }
 
+.banner-con .title-box {
+  flex: 1;
+  min-width: 0;
+}
+
 .banner-con .title-box .title {
   font-size: 3.1rem;
   font-weight: 700;
@@ -213,20 +218,36 @@
   }
 
   .banner {
-    height: 274px;
+    height: auto;
   }
 
   .banner-con {
-    padding: 0 32px;
+    padding: 32px 20px;
+    gap: 16px;
   }
 
   .banner-con .title-box .title {
-    font-size: 2.75rem;
-    line-height: 54px;
+    font-size: 1.75rem;
+    line-height: 1.35;
+    margin-bottom: 12px;
   }
 
   .banner-con .title-box .sub-title {
-    font-size: 1.125rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .banner-con .img-box {
+    width: 168px;
+    max-width: 34%;
+    flex-shrink: 0;
+    height: auto;
+    align-self: center;
+  }
+
+  .banner-con .img-box img {
+    height: auto;
+    max-height: 160px;
   }
 
   .popular-con .title-box {
@@ -244,25 +265,28 @@
 }
 
 @media (max-width: 480px) {
-  .banner {
-    height: 274px;
-  }
-
   .banner-con {
-    padding: 0 24px;
+    padding: 28px 16px;
+    gap: 12px;
   }
 
   .banner-con .title-box .title {
-    font-size: 2.125rem;
-    line-height: 44px;
+    font-size: 1.5rem;
+    line-height: 1.35;
+    margin-bottom: 10px;
   }
 
   .banner-con .title-box .sub-title {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
 
   .banner-con .img-box {
-    display: none;
+    width: 112px;
+    max-width: 30%;
+  }
+
+  .banner-con .img-box img {
+    max-height: 120px;
   }
 
   .popular-con .title-box {
