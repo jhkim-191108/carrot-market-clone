@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="F1 2차 프로젝트 당근마켓 클론 코딩">
+    <meta name="author" content="김지훈, 전재형, 오수빈, 인마리아">
+    <meta name="keywords" content="당근마켓 클론, HTML, CSS, JS, 오르미, 이스트소프트">
+    <!-- 공유/검색용 Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="F1 CarrotMarket">
+    <meta property="og:description" content="F1 2차 프로젝트 당근마켓 클론 코딩">
+    <meta property="og:image" content="../images/logo.png">
+    <meta property="og:url" content="https://github.com/jhkim-191108/F1">
+    <title>당근 - 동네인증</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/location.css">
+</head>
+<body>
+    <!-- 상단Header -->
+    <header class="upperBar">
+        <!-- header내부 섹션1 : 로고 및 중고거래 동네인증 버튼 -->
+        <nav id="upperBarLeft">
+        <!-- 로고 이미지 + 홈화면 링크 -->
+            <a href="./onboarding.html">
+                <img src="../images/logo.png" alt="당근로고" class="upperLogo">
+            </a>
+            <!-- 로고 이미지 옆 버튼 묶음 div -->
+            <!-- 현재 페이지면 주황. 동네인증은 로그인 후에만 보임 -->
+            <div class="upperLeftText">
+                <a href="./trade.html" id="tradeNav">중고거래</a>
+                <a href="./location.html" id="locationNav" hidden>동네인증</a>
+            </div>
+        </nav>
+        <!-- header 내부 섹션2 : flex, gap이 10으로 동일하기 때문에 따로 나눠서 감싸지 않음-->
+        <div id="upperBarRight">
+            <!-- 검색창 js로 엔터눌러 검색 등을 하기 위해 form으로 감쌈-->
+            <!-- 작은 화면은 돋보기로 검색창을 열고 닫음 -->
+            <div class="searchWrap">
+                <button type="button" id="searchToggle" aria-label="검색 열기" aria-expanded="false">
+                    <img src="../images/icon-search.svg" alt="돋보기버튼">
+                </button>
+                <form id="searchForm">
+                    <input type="search" name="search" id="searchTextArea" placeholder="물품이나 동네를 검색해보세요">
+                </form>
+            </div>
+            <!-- 로그아웃 상태에서만 보일 버튼 -->
+            <div id="logoutStatusHeader">
+                <a href="./login.html" id="upperLoginButton">로그인</a>
+            </div>
+
+            <!-- 로그인 상태에서만 보일 버튼 -->
+            <div id="loginStatusHeader" hidden>
+                <!-- 채팅하기버튼 -->
+                <a href="./chat.html" id="upperChatButton">채팅하기</a>
+                <!-- 로그아웃버튼 -->
+                <button type="button" id="upperLogoutButton">로그아웃</button>
+                <!-- 프로필 버튼 -->
+                <div class="profileDropdown">
+                    <button type="button" id="profileButton" aria-label="프로필 메뉴" aria-expanded="false">
+                        <img src="../images/profile.svg" alt="" class="defaultIcon"/>
+                    </button>
+                    <!-- 모바일에서만 열림. 데스크톱은 프로필 클릭 시 마이페이지 -->
+                    <ul id="dropdownMenu" hidden>
+                        <li><a href="./mypage.html">마이페이지</a></li>
+                        <li><a href="./chat.html">채팅</a></li>
+                        <li><button type="button" class="dropdown-logout">로그아웃</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 동네인증 페이지 본문 -->
+    <main class="location">
+    <section class="location-box">
+
+        <!-- ① 직접 검색해서 내 동네 설정하기 -->
+        <!-- data-role="title"은 location.js에서 확정 여부에 따라 문구를 바꿔 넣는 자리 -->
+        <div class="location-set">
+        <label class="location-label" data-role="title">어디에 살고 계신가요?</label>
+            <!-- input-row: 검색창 + 설정 버튼  -->
+            <div class="input-row">
+                <!-- data-role="input": 여기 입력하면 location.js가 디바운스 후 자동 검색 -->
+                <input type="text" class="location-input" placeholder="예) 서울 강서구 화곡동" data-role="input">
+                <!-- data-role="edit-btn": 검색해서 고른 동네를 현재 위치와 비교해 확정하는 버튼 -->
+                <button class="btn-outline" data-role="edit-btn">내 동네 설정</button>
+                <!-- data-role="search-results": 검색 결과 목록. 기본은 hidden, JS가 결과 있을 때만 보여줌 -->
+                <ul class="location-results" data-role="search-results" hidden></ul>
+            </div>
+            <!-- data-role="set-status": "동네를 선택해주세요" 같은 안내/에러 문구 자리 -->
+            <p class="location-status" data-role="set-status"></p>
+        </div>
+
+        <!-- ② GPS로 현재 위치 인증하기 -->
+        <div class="location-verify">
+            <p class="location-label">현재 위치로 동네 인증하기</p>
+
+            <!-- location.js가 페이지 진입 시 GPS 좌표로 src를 채워줌 -->
+            <iframe id="map" class="location-map" title="지도"></iframe>
+
+            <!-- data-role="status": "현재 위치: ○○동" 같은 GPS 인증 상태 문구 자리 -->
+            <p class="location-status" data-role="status"></p>
+
+            <!-- data-role="confirm-btn": GPS 위치 확인 전까지 disabled, 확인되면 JS가 활성화 -->
+            <button class="btn-confirm" data-role="confirm-btn" disabled>동네인증 완료하기</button>
+        </div>
+
+    </section>
+
+    <!-- 에러 메세지 모달: 검색한 동네가 현재 위치와 너무 다를 때 location.js가 hidden을 풀어서 띄움 -->
+    <div class="modal-overlay" data-role="distance-modal" hidden>
+        <div class="modal-box">
+            <p class="modal-message">실제 계신 위치와 너무 멀어서<br>인증할 수 없어요.</p>
+            <div class="modal-actions">
+                <!-- 취소: 모달만 닫음 -->
+                <button type="button" class="btn-modal-cancel" data-role="modal-cancel">취소</button>
+                <!-- 동네 수정하기: 모달 닫고 입력값 초기화  -->
+                <button type="button" class="btn-modal-edit" data-role="modal-edit">동네 수정하기</button>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    
+    <script src="../js/modal.js"></script>
+    <script src="../js/location.js"></script>
+    <script src="../js/header.js"></script>
+
+
+</body>
+</html>

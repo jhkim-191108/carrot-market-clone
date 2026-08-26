@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="F1 2차 프로젝트 당근마켓 클론 코딩">
+    <meta name="author" content="김지훈, 전재형, 오수빈, 인마리아">
+    <meta name="keywords" content="당근마켓 클론, HTML, CSS, JS, 오르미, 이스트소프트">
+    <!-- 공유/검색용 Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="F1 CarrotMarket">
+    <meta property="og:description" content="F1 2차 프로젝트 당근마켓 클론 코딩">
+    <meta property="og:image" content="../images/logo.png">
+    <meta property="og:url" content="https://github.com/jhkim-191108/F1">
+    <title>당근마켓 검색</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/search.css">
+</head>
+<body>
+    <!-- 상단Header --> 
+    <header class="upperBar">
+        <!-- header내부 섹션1 : 로고 및 중고거래 동네인증 버튼 -->
+        <nav id="upperBarLeft">
+        <!-- 로고 이미지 + 홈화면 링크 -->
+            <a href="./onboarding.html">
+                <img src="../images/logo.png" alt="당근로고" class="upperLogo">
+            </a>
+            <!-- 로고 이미지 옆 버튼 묶음 div -->
+            <!-- 현재 페이지면 주황. 동네인증은 로그인 후에만 보임 -->
+            <div class="upperLeftText">
+                <a href="./trade.html" id="tradeNav">중고거래</a>
+                <a href="./location.html" id="locationNav" hidden>동네인증</a>
+            </div>
+        </nav>
+        <!-- header 내부 섹션2 : flex, gap이 10으로 동일하기 때문에 따로 나눠서 감싸지 않음-->
+        <div id="upperBarRight">
+            <!-- 검색창 js로 엔터눌러 검색 등을 하기 위해 form으로 감쌈-->
+            <!-- 작은 화면은 돋보기로 검색창을 열고 닫음 -->
+            <div class="searchWrap">
+                <button type="button" id="searchToggle" aria-label="검색 열기" aria-expanded="false">
+                    <img src="../images/icon-search.svg" alt="돋보기버튼">
+                </button>
+                <form id="searchForm">
+                    <input type="search" name="search" id="searchTextArea" placeholder="물품이나 동네를 검색해보세요">
+                </form>
+            </div>
+            <!-- 로그아웃 상태에서만 보일 버튼 -->
+            <div id="logoutStatusHeader">
+                <a href="./login.html" id="upperLoginButton">로그인</a>
+            </div>
+            
+            <!-- 로그인 상태에서만 보일 버튼 -->
+            <div id="loginStatusHeader" hidden>
+                <!-- 채팅하기버튼 -->
+                <a href="./chat.html" id="upperChatButton">채팅하기</a>
+                <!-- 로그아웃버튼 -->
+                <button type="button" id="upperLogoutButton">로그아웃</button>
+                <!-- 프로필 버튼 -->
+                <div class="profileDropdown">
+                    <button type="button" id="profileButton" aria-label="프로필 메뉴" aria-expanded="false">
+                        <img src="../images/profile.svg" alt="" class="defaultIcon"/>
+                    </button>
+                    <!-- 모바일에서만 열림. 데스크톱은 프로필 클릭 시 마이페이지 -->
+                    <ul id="dropdownMenu" hidden>
+                        <li><a href="./mypage.html">마이페이지</a></li>
+                        <li><a href="./chat.html">채팅</a></li>
+                        <li><button type="button" class="dropdown-logout">로그아웃</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+        <!-- 메인 -->
+        <main id="main">
+            <h1 class="srOnly">중고거래 상품 검색 및 탐색</h1>
+            <!-- 메인섹션 전체 박스 section그 아래div 여기에 그리드 적용 -->
+            <section id="mainSectionGrid">
+                <h2 class="srOnly">검색결과</h2>
+                <!-- 여기에 JS에서 받아온 카드들이 들어올 예정 -->
+            </section>
+            <!-- 하단 페이지 넘기기 버튼 -->
+            <nav id="pageList" aria-label="상품 페이지 조작">
+                <button type="button" id="prevPage" class="pageButton" aria-label="이전 페이지">&lt;</button>
+                <span id="pageNums" role="status" aria-label="페이지 번호"></span>
+                <button type="button" id="nextPage" class="pageButton" aria-label="다음 페이지">&gt;</button>
+            </nav>
+        </main>
+
+    <script src="../js/modal.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/search.js"></script>
+</body>
+</html>

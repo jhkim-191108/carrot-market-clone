@@ -1,0 +1,100 @@
+{
+    "version" : 2,
+    "builds" : [
+        {
+            "src": "server.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "html/**",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "css/**",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "js/**",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "images/**",
+            "use": "@vercel/static"
+        }
+    ],
+    "redirects": [
+        {
+            "source": "/",
+            "destination": "/html/onboarding.html",
+            "permanent": false
+        },
+        {
+            "source": "/html",
+            "destination": "/html/onboarding.html",
+            "permanent": false
+        },
+        {
+            "source": "/html/",
+            "destination": "/html/onboarding.html",
+            "permanent": false
+        }
+    ],
+    "routes" : [
+        {
+            "src": "/api/(.*)",
+            "dest": "server.js"
+        },
+        {
+            "handle": "filesystem"
+        },
+        {
+            "src": "/login",
+            "dest": "/html/login.html"
+        },
+
+        {
+            "src": "/register",
+            "dest": "/html/register.html"
+        },
+
+        {
+            "src": "/chat",
+            "dest": "/html/chat.html"
+        },
+
+        {
+            "src": "/location",
+            "dest": "/html/location.html"
+        },
+
+        {
+            "src": "/mypage",
+            "dest": "/html/mypage.html"
+        },
+
+        {
+            "src": "/search",
+            "dest": "/html/search.html"
+        },
+
+        {
+            "src": "/trade-post",
+            "dest": "/html/trade-post.html"
+        },
+
+        {
+            "src": "/trade",
+            "dest": "/html/trade.html"
+        },
+
+        {
+            "src": "/write",
+            "dest": "/html/write.html"
+        },
+
+        {
+            "src": "/(.*)",
+            "dest" : "server.js"
+        }
+    ]
+}

@@ -1,0 +1,158 @@
+/* H(제목)태그 숨김표시 */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+/* 메인-검색 결과 그리드 섹션 */
+#mainSectionGrid {
+    margin: 40px auto 0;
+    padding: 0 40px;
+    max-width: 1080px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 40px;
+    justify-content: center;
+    box-sizing: border-box;
+}
+/* 상품 이미지 */
+.productImg {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.mainGridCardBox {
+    min-width: 0;
+    cursor: pointer;
+    animation: fade-up 0.4s ease both;
+    transition: transform 0.2s ease;
+}
+
+.mainGridCardBox:hover {
+    transform: translateY(-4px);
+}
+
+.mainGridCardBox:hover .productImg {
+    transform: scale(1.05);
+}
+/* 상품 정보란 */
+.productInfo {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.productName {
+    color: var(--gray-900);
+    font-size: 1.063rem;
+    font-weight: 400;
+}
+
+.productPrice {
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: var(--gray-900);
+}
+
+.productAddress {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--gray-600);
+}
+/* 조호수 및 채팅수 */
+.productMeta {
+    margin-top: 6px;
+    display: flex;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.meta {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--gray-600);
+}
+/* 페이지 번호 조작 */
+#pageList {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+}
+
+#pageList button {
+    border: none;
+    background-color: var(--gray-050);
+    width: 12px; height: 20px;
+    padding: 0;
+    transition: all 0.3s;
+}
+/* 페이지 조작버튼 마우스 올릴 시 변화 */
+#pageList button:hover {
+    color: blue;
+    transform: scale(1.5);
+}
+/* 이전페이지 아이콘 */
+#prevPage {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-500);
+}
+/* 다음페이지 아이콘 */
+#nextPage {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+/* 페이지번호 */
+#pageNums {
+    font-size: 1.063rem;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+/* 검색 결과 없음 */
+.emptyMessage {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 0;
+    font-size: 1rem;
+    color: var(--gray-600);
+}
+
+/* 페이지가 1페이지 뿐일 때 버튼 비활성화 된 것처럼 표시 */
+#pageList button:disabled {
+    color: var(--gray-300);
+    cursor: default;
+    transform: none;
+    opacity: 0.5;
+}
+
+@media (max-width: 1024px) {
+    #mainSectionGrid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+        padding: 0 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    #mainSectionGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        padding: 0 16px;
+        margin-top: 24px;
+    }
+}

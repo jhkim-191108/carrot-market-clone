@@ -1,0 +1,485 @@
+body {
+    background-color: var(--gray-050);
+}
+
+/* 상단바 크기 정하기 및 sticky로 고정 */
+.upperBar {
+    position: sticky;
+    top:0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%; height: 60px;
+    padding: 7px 120px;
+    background-color: var(--gray-000);
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* 왼쪽 로고 이미지 및 버튼2개 */
+#upperBarLeft {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 68px;
+}
+
+.upperLogo{
+    width: auto;
+    height: 34px;
+    object-fit: contain;
+}
+
+.upperLeftText {
+    display: flex;
+    gap: 31px;
+    font-size: 1.188rem;
+    font-weight: bold;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* active에 따라 색상 다르게 표현할 구간 */
+#tradeNav,
+#locationNav,
+.mainLogoText,
+.locationVerify {
+    color: var(--gray-800);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+/* 지금 페이지 메뉴는 주황 */
+#tradeNav.activeNav,
+#locationNav.activeNav,
+.mainLogoText.activeNav,
+.locationVerify.activeNav {
+    color: var(--orange-600);
+}
+
+/* 마우스 올리면 */
+#tradeNav:hover,
+#locationNav:hover,
+.mainLogoText:hover,
+.locationVerify:hover {
+    color: var(--orange-600);
+}
+
+#upperChatButton:hover {
+    background-color: var(--orange-600);
+    color: var(--gray-000);
+}
+
+#upperLogoutButton:hover {
+    border-color: var(--gray-400);
+    color: var(--gray-700);
+    background-color: var(--gray-050);
+}
+
+#upperLoginButton:hover {
+    border-color: var(--orange-600);
+    color: var(--orange-600);
+}
+
+#profileButton:hover,
+#searchToggle:hover {
+    background-color: var(--gray-100);
+}
+
+#dropdownMenu a:hover,
+#dropdownMenu button:hover {
+    background-color: var(--gray-050);
+    color: var(--orange-600);
+}
+
+/* 상단바 우측 검색창 로그인상태별 버튼 */
+#upperBarRight{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.searchWrap {
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-width: 0;
+    flex: 1 1 auto;
+    max-width: 288px;
+}
+
+#searchForm {
+    width: 100%;
+    min-width: 0;
+}
+
+#searchTextArea {
+    border-radius: 10px;
+    background-color: var(--gray-100);
+    width: 100%;
+    max-width: 288px;
+    min-width: 0;
+    height: 39px;
+    border-style: none;
+    padding: 7px 10px;
+    box-sizing: border-box;
+}
+
+/* 작은 화면용 돋보기. 기본은 숨김 */
+#searchToggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    padding: 0;
+    color: var(--gray-800);
+    cursor: pointer;
+}
+
+/* 로그인했을 때 채팅하기 */
+#upperChatButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 7px 17px;
+    width: 98px; height: 39px;
+    border: 1px solid var(--orange-600);
+    border-radius: 8px;
+    background-color: var(--gray-000);
+    font-size: 1.063rem; color: var(--orange-600);
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* 로그인했을 때 로그아웃 */
+#upperLogoutButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 7px 17px;
+    width: 98px; height: 39px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 1.063rem; color: var(--gray-400);
+    background-color: var(--gray-000);
+    font-weight: 400;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* 로그아웃 상태 로그인 버튼 */
+#upperLoginButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 7px 17px;
+    width: 98px; height: 39px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 1.063rem; color: var(--gray-900);
+    background-color: var(--gray-000);
+    font-weight: 400;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+#upperChatButton,
+#upperLogoutButton,
+#upperLoginButton {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+#upperChatButton:hover,
+#upperLoginButton:hover,
+#upperLogoutButton:hover {
+    transform: translateY(-1px);
+}
+
+/* 로그인/로그아웃 상태에 따라 나머지 하나 숨기기 */
+#loginStatusHeader:not([hidden]),
+#logoutStatusHeader:not([hidden]) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 프로필 아이콘+하단 드롭다운 */
+.profileDropdown {
+    position: relative;
+}
+
+#profileButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.defaultIcon {
+    display: block;
+    width: 40px;
+    height: 40px;
+}
+
+/* 모바일 프로필 메뉴. 기본은 숨김 */
+#dropdownMenu {
+    display: none;
+    list-style: none;
+    margin: 0;
+}
+
+#searchToggle img{
+    width: 30px;
+    height: 30px;
+}
+
+/* 1200px 이하: 좌우 여백·간격만 줄여서 한 줄 유지 */
+@media (max-width: 1200px) {
+    .upperBar {
+        padding: 7px 40px;
+    }
+
+    #upperBarLeft {
+        gap: 24px;
+    }
+
+    .upperLeftText {
+        gap: 20px;
+    }
+}
+
+/* 1024px 이하 ~ 769px: 검색창·버튼 폭을 더 줄임 */
+@media (max-width: 1024px) {
+    .upperBar {
+        padding: 7px 20px;
+        gap: 12px;
+    }
+
+    #upperBarLeft {
+        gap: 16px;
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+    .upperLeftText {
+        gap: 12px;
+        font-size: 1rem;
+    }
+
+    .searchWrap {
+        max-width: 200px;
+    }
+
+    #upperChatButton,
+    #upperLogoutButton,
+    #upperLoginButton {
+        width: auto;
+        min-width: 0;
+        padding: 7px 12px;
+    }
+}
+
+/* 반응형 미디어쿼리, 로그인 상태로 전환 후 버튼2개일 때 체크해서 적용 */
+/* 768px 이하 모바일. 돋보기 검색, 프로필 드롭다운 */
+@media (max-width: 768px) {
+    .upperBar {
+        padding: 8px 12px;
+        flex-wrap: nowrap;
+        height: 60px;
+    }
+
+    #upperBarLeft {
+        gap: 12px;
+    }
+
+    .upperLeftText {
+        gap: 16px;
+    }
+
+    #upperBarRight {
+        width: auto;
+        flex: 0 0 auto;
+    }
+
+    .searchWrap {
+        max-width: none;
+        flex: 0 0 auto;
+        /* 검색창을 돋보기가 아니라 헤더 전체 기준으로 펼침 */
+        position: static;
+    }
+
+    /* 공간은 충분하지만 화면이 작아지니까 글자크기 0.1rem줄임 */
+    #searchTextArea::placeholder {
+        font-size: 0.7rem;
+    }
+
+    /* 돋보기만 두고, 검색창은 헤더 아래에 펼침 */
+    #searchToggle {
+        display: inline-flex;
+        flex-shrink: 0;
+    }
+
+    #searchForm {
+        display: none;
+        width: auto;
+    }
+
+    .searchWrap.is-open #searchForm {
+        display: block;
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        top: calc(100% + 8px);
+        width: auto;
+        max-width: none;
+        z-index: 1100;
+    }
+
+    .searchWrap.is-open #searchTextArea {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        box-shadow: 0 4px 12px rgba(17, 17, 17, 0.12);
+    }
+
+    /* 채팅/로그아웃은 숨기고 프로필 메뉴에서 씀 */
+    #upperChatButton,
+    #upperLogoutButton {
+        display: none;
+    }
+
+    /* 프로필 드롭다운. 마이페이지/채팅/로그아웃 */
+    #dropdownMenu:not([hidden]) {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        z-index: 1100;
+        min-width: 148px;
+        padding: 6px 0;
+        background-color: var(--gray-000);
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(17, 17, 17, 0.12);
+    }
+
+    #dropdownMenu a,
+    #dropdownMenu button {
+        display: block;
+        width: 100%;
+        padding: 12px 16px;
+        font-family: inherit;
+        font-size: 0.9375rem;
+        color: var(--gray-800);
+        text-align: left;
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+}
+
+/* 공통 안내 모달. alert/confirm 대신 */
+.app-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(17, 17, 17, 0.4);
+    box-sizing: border-box;
+    animation: fade-up 0.2s ease;
+}
+
+.app-modal[hidden] {
+    display: none;
+}
+
+.app-modal-box {
+    width: 100%;
+    max-width: 320px;
+    padding: 28px 24px 20px;
+    background: var(--gray-000);
+    border-radius: 12px;
+    box-sizing: border-box;
+    animation: fade-up 0.22s ease;
+}
+
+.app-modal-message {
+    margin: 0 0 24px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--gray-900);
+    text-align: center;
+    word-break: keep-all;
+}
+
+.app-modal-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.app-modal-ok,
+.app-modal-cancel {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.app-modal-ok:hover,
+.app-modal-cancel:hover {
+    transform: translateY(-1px);
+}
+
+.app-modal-ok:hover {
+    filter: brightness(1.06);
+}
+
+.app-modal-ok {
+    border: none;
+    background: var(--orange-600);
+    color: var(--gray-000);
+}
+
+.app-modal-cancel {
+    border: 1px solid var(--gray-200);
+    background: var(--gray-000);
+    color: var(--gray-900);
+}
+
+.app-modal-cancel[hidden] {
+    display: none;
+}

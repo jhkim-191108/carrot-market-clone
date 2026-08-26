@@ -1,0 +1,271 @@
+body {
+  background-color: var(--gray-100);
+  text-align: center;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ========== 메인 ========== */
+main {
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.main-con {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ========== 뒤로가기 버튼 ========== */
+.btn-back-box {
+  width: 100%;
+  padding-top: 38px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  border: none;
+  color: var(--gray-500);
+  background-color: transparent;
+  font-size: 1.063rem;
+  font-weight: 600;
+}
+
+/* 게시글 본문. 이미지, 판매자, 제목, 설명 */
+.post {
+  background-color: var(--gray-000);
+  color: var(--gray-900);
+  border: 1px solid var(--gary-100);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 40px 55px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.post .img-box {
+  width: 100%;
+  height: 380px;
+  background-color: var(--gray-200);
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.post .img-box img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.post-box-1,
+.post-box-2 {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.post-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.post-id {
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.post-loc {
+  font-size: 0.875rem;
+  font-weight: 400;
+  opacity: 0.3;
+}
+
+/* 채팅하기. 방 만들고 chat.html로 이동 */
+.btn-chat {
+  border: none;
+  background-color: var(--orange-600);
+  border-radius: 10px;
+  color: var(--gray-000);
+  font-size: 1.063rem;
+  font-weight: 700;
+  padding: 12px 50px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.btn-chat:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--gray-200);
+}
+
+.post-box-2 {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.post-box-2 .post-title {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.post-sub {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stat {
+  margin-top: 8px;
+  display: flex;
+  gap: 4px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  opacity: 0.5;
+}
+
+.devider {
+  color: var(--gray-400);
+}
+
+.post-content {
+  width: 100%;
+}
+
+.post-text {
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: left;
+  line-height: 28px;
+}
+
+.post-place {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.5;
+}
+
+/* 본인 글 수정/삭제. hidden이면 flex여도 안 보이게 */
+.post-btn-box {
+  width: 100%;
+  padding-top: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.post-btn-box[hidden] {
+  display: none;
+}
+
+.post-btn-box button {
+  color: var(--gray-600);
+  border: none;
+  background-color: transparent;
+}
+
+/* ========== 태블릿 ========== */
+@media (max-width: 1024px) {
+  .post {
+    padding: 24px;
+  }
+
+  .post-box-2 .post-title {
+    white-space: normal;
+    word-break: keep-all;
+    text-align: left;
+  }
+
+  .btn-chat {
+    padding: 10px 24px;
+  }
+}
+
+/* ========== 모바일 ========== */
+@media (max-width: 768px) {
+  main {
+    padding: 0 12px;
+  }
+
+  .post {
+    padding: 16px;
+  }
+
+  .post .img-box {
+    height: auto;
+    min-height: 200px;
+    max-height: none;
+  }
+
+  .post .img-box img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  .post-box-2 .post-title {
+    white-space: normal;
+    word-break: keep-all;
+    text-align: left;
+  }
+
+  .btn-back {
+    font-size: 0.875rem;
+  }
+
+  .btn-chat {
+    font-size: 0.875rem;
+    padding: 10px 20px;
+  }
+
+  .post-box-2 {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .post-sub {
+    align-items: flex-start;
+  }
+
+  .post-price {
+    font-size: 1rem;
+  }
+
+  .stat {
+    font-size: 0.75rem;
+  }
+
+  .post-place {
+    font-size: 0.875rem;
+  }
+}

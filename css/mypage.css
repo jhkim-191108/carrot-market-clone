@@ -1,0 +1,204 @@
+/* 마이페이지. 프로필 + 정보 수정 폼 */
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.mypage,
+.mypage input{
+    box-sizing: border-box;
+}
+
+.mypage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background-color: var(--gray-100);
+}
+
+.mypage-card {
+    width: 100%;
+    max-width: 360px;
+}
+
+.mypage-title {
+    margin-bottom: 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    text-align: center;
+}
+
+/* 프로필 카드. 닉네임/이메일/지역/가입일 */
+.mypage-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 24px 16px;
+    background-color: var(--gray-000);
+    border-radius: 12px;
+}
+
+.mypage-avatar-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+}
+
+.mypage-avatar {
+    width: 80px;
+    height: 80px;
+    background-color: var(--gray-200);
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+}
+
+/* 카메라 뱃지. 클릭하면 사진 선택 */
+.mypage-avatar-edit {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--orange-600);
+    border: 2px solid var(--gray-000);
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.mypage-avatar-edit img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    filter: invert(1);
+}
+
+.mypage-nickname {
+    margin-bottom: 6px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.mypage-email,
+.mypage-location,
+.mypage-date {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+/* 닉네임 수정 폼 */
+.mypage-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.mypage-field label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.mypage-field input {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--gray-900);
+    background-color: var(--gray-000);
+    border: none;
+    border-radius: 8px;
+    outline: none;
+}
+
+.mypage-field input::placeholder {
+    color: var(--gray-400);
+}
+
+.mypage-field input:focus {
+    box-shadow: 0 0 0 2px var(--orange-600);
+}
+
+.mypage-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-000);
+    background-color: var(--orange-600);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.mypage-btn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+}
+/* 지역은 동네인증에서만 바꿔서 수정 불가처럼 보이게 */
+#locationInput{
+    cursor: not-allowed;
+    background: var(--gray-200);
+    color: var(--gray-800);
+}
+/* 768 이하 */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100dvh;
+    }
+
+    .mypage {
+        width: 100%;
+        margin-top: 0;
+        min-height: 0;
+        padding: 24px 16px 32px;
+        box-sizing: border-box;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .mypage-card {
+        padding-top: 20px;
+        width: 100%;
+        max-width: 360px;
+        box-sizing: border-box;
+    }
+
+    .mypage-title {
+        margin-bottom: 16px;
+        font-size: 1.125rem;
+    }
+
+    .mypage-profile {
+        margin-bottom: 24px;
+        padding: 20px 16px;
+    }
+
+    .mypage-field {
+        margin-bottom: 24px;
+    }
+
+    .mypage-field input,
+    .mypage-btn {
+        padding: 12px 14px;
+        font-size: 0.9375rem;
+    }
+}

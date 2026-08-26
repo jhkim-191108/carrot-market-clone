@@ -1,0 +1,305 @@
+/* ========== 플로팅 버튼 ========== */
+.btn-floating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  width: 106px;
+  height: 106px;
+  background-color: var(--orange-600);
+  color: var(--gray-000);
+  border-radius: 50%;
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  z-index: 10;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-floating:hover {
+  transform: translateY(-4px) scale(1.04);
+}
+
+/* ========== 배너 ========== */
+.banner {
+  height: 360px;
+  background-color: var(--yellow-200);
+  overflow: hidden;
+}
+
+.banner-con {
+  height: 100%;
+  margin: 0 auto;
+  max-width: 1120px;
+  padding: 0 40px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.banner-con .title-box {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-con .title-box .title {
+  font-size: 3.1rem;
+  font-weight: 700;
+  line-height: 4rem;
+  margin-bottom: 24px;
+  color: var(--gray-900);
+  word-break: keep-all;
+}
+
+.banner-con .title-box .sub-title {
+  font-size: 1.375rem;
+  opacity: 0.5;
+  font-weight: 400;
+  line-height: 26px;
+}
+
+.banner-con .img-box {
+  width: 476px;
+  max-width: 42%;
+  min-width: 0;
+  height: 100%;
+}
+
+.banner-con .img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: float-y 4s ease-in-out infinite;
+}
+
+/* ========== 인기매물 ========== */
+.popular-con {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.popular-con .title-box {
+  text-align: center;
+  padding-top: 112px;
+  padding-bottom: 64px;
+}
+
+.popular-con .title-box .title {
+  color: var(--gray-900);
+  font-size: 2.625rem;
+  font-weight: 700;
+  line-height: 54px;
+}
+
+.popular-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.popular-item {
+  min-width: 0;
+  animation: fade-up 0.4s ease both;
+}
+
+.popular-item a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.popular-item a:hover {
+  transform: translateY(-4px);
+}
+
+.popular-thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  background-color: var(--gray-200);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.popular-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.popular-item a:hover .popular-thumb img {
+  transform: scale(1.05);
+}
+
+.popular-text-box {
+  color: var(--gray-900);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.popular-name {
+  font-size: 1.063rem;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.popular-price {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.popular-location {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--gray-600);
+}
+
+.popular-info {
+  gap: 4px;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.popular-info .num {
+  font-size: 0.75rem;
+}
+
+.popular-info .dot {
+  color: var(--gray-300);
+}
+
+/* ========== 태블릿 ========== */
+@media (max-width: 1024px) {
+  .banner {
+    height: 300px;
+  }
+
+  .banner-con .title-box .title {
+    font-size: 2.4rem;
+    line-height: 1.25;
+  }
+
+  .popular-con .title-box {
+    padding-top: 80px;
+    padding-bottom: 40px;
+  }
+
+  .popular-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+/* ========== 모바일 ========== */
+@media (max-width: 768px) {
+  .btn-floating {
+    width: 64px;
+    height: 64px;
+    right: 16px;
+    bottom: 16px;
+    font-size: 0.75rem;
+    padding: 8px;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .banner {
+    height: auto;
+  }
+
+  .banner-con {
+    padding: 32px 20px;
+    gap: 16px;
+  }
+
+  .banner-con .title-box .title {
+    font-size: 1.75rem;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+
+  .banner-con .title-box .sub-title {
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .banner-con .img-box {
+    width: 168px;
+    max-width: 34%;
+    flex-shrink: 0;
+    height: auto;
+    align-self: center;
+  }
+
+  .banner-con .img-box img {
+    height: auto;
+    max-height: 160px;
+  }
+
+  .popular-con .title-box {
+    padding-bottom: 32px;
+  }
+
+  .popular-con .title-box .title {
+    font-size: 2rem;
+  }
+
+  .popular-list {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-con {
+    padding: 28px 16px;
+    gap: 12px;
+  }
+
+  .banner-con .title-box .title {
+    font-size: 1.5rem;
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+
+  .banner-con .title-box .sub-title {
+    font-size: 0.875rem;
+  }
+
+  .banner-con .img-box {
+    width: 112px;
+    max-width: 30%;
+  }
+
+  .banner-con .img-box img {
+    max-height: 120px;
+  }
+
+  .popular-con .title-box {
+    padding-top: 80px;
+    padding-bottom: 24px;
+  }
+
+  .popular-con .title-box .title {
+    font-size: 1.625rem;
+  }
+
+  .popular-list {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 24px;
+  }
+}

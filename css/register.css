@@ -1,0 +1,147 @@
+/* 회원가입 화면. 헤더 아래 폼을 위쪽에 둠 */
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.register, .register input{
+    box-sizing: border-box;
+}
+
+/* 폼 영역. 위쪽 정렬 */
+.register {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 16px 32px;
+    background-color: var(--gray-100);
+}
+
+.register-form {
+    width: 100%;
+    max-width: 360px;
+}
+
+.register-title {
+    margin-bottom: 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    text-align: center;
+}
+
+/* 아이디/닉네임/비밀번호 칸 */
+.register-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.register-field label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.register-field input {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--gray-900);
+    background-color: var(--gray-000);
+    border: none;
+    border-radius: 8px;
+    outline: none;
+}
+
+.register-field input::placeholder {
+    color: var(--gray-400);
+}
+
+.register-field input:focus {
+    box-shadow: 0 0 0 2px var(--orange-600);
+}
+
+/* 회원가입 제출 버튼 */
+.register-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-000);
+    background-color: var(--orange-600);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.register-btn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+}
+
+/* 로그인 페이지로 가는 안내 */
+.register-guide {
+    margin-top: 32px;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    text-align: center;
+}
+
+.register-login {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--orange-600);
+    text-align: center;
+    text-decoration: none;
+}
+
+/* 768px 이하. 폼 너비를 화면에 맞춤 */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100dvh;
+    }
+
+    .register {
+        width: 100%;
+        padding: 24px 16px 32px;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .register-form {
+        padding-top: 20px;
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .register-title {
+        margin-bottom: 16px;
+        font-size: 1.125rem;
+    }
+
+    .register-field {
+        margin-bottom: 24px;
+    }
+
+    .register-field input,
+    .register-btn {
+        padding: 12px 14px;
+        font-size: 0.9375rem;
+    }
+
+    .register-guide {
+        margin-top: 24px;
+    }
+}

@@ -1,0 +1,306 @@
+/* ======================
+    동네인증 페이지 레이아웃
+   ====================== */
+
+/* 페이지 전체 배경/여백  */
+.location {
+    display: flex;
+    justify-content: center;
+    padding: 60px 120px 60px;
+    padding-top: calc(60px + 60px);
+    background: var(--yellow-200);
+    min-height: calc(100vh - 60px);
+    box-sizing: border-box;
+}
+
+/* "내 동네 설정"(검색) 영역과 "동네인증"(GPS) 영역 사이 간격 */
+.location-set { margin-bottom: 40px; }
+
+/* 실제 콘텐츠 폭 제한  */
+.location-box { width: 100%; max-width: 870px; }
+
+/* 라벨 공통 스타일 */
+.location-label { display: block; font-size: 1rem; color: var(--gray-900); }
+
+/* 검색 input + "내 동네 설정" 버튼을 감싸는 가로 줄
+   position: relative → 아래 검색결과 드롭다운의 기준 위치가 됨 */
+.input-row {
+    position: relative;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+    margin-top: 8px;
+}
+
+.location-input {
+    flex: 1;
+    padding: 14px 16px;
+    border: 1px solid var(--gray-000);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: var(--gray-000);
+}
+
+/* 동네 검색 결과 드롭다운 목록.
+   input-row 기준으로 바로 아래에 절대위치로 붙임 */
+[data-role="search-results"] {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 6px;
+    list-style: none;
+    padding: 0;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+    background: var(--gray-000);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+}
+
+[data-role="search-results"] li {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: var(--gray-900);
+    cursor: pointer;
+}
+
+[data-role="search-results"] li:hover {
+    background: var(--gray-050);
+}
+
+
+/* 검색/설정 관련 안내·에러 문구
+   min-height를 줘서 문구가 있을 때/없을 때 레이아웃이 흔들리지 않게 함 */
+.location-set .location-status {
+    display: block;
+    min-height: 24px;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    text-align: left;
+}
+
+/* 위치 불일치 등 에러 상태일 때 강조 색상 */
+.location-set .location-status.is-error {
+    color: var(--orange-600);
+    font-weight: 600;
+}
+
+
+/* "내 동네 설정" 버튼 */
+.btn-outline {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid var(--orange-600);
+    border-radius: 8px;
+    padding: 14px 20px;
+    background: var(--gray-000);
+    color: var(--orange-600);
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* GPS 인증 영역 (라벨 + 지도 + 상태문구 + 완료 버튼)  */
+.location-verify { display: flex; flex-direction: column; gap: 16px; }
+
+/* 지도(iframe) 영역 */
+.location-map {
+    max-width: 870px;
+    height: 468px;
+    background: var(--gray-100);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: none;
+}
+
+/* GPS 인증 관련 안내 문구 (data-role="status") */
+.location-status {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--gray-900);
+    line-height: 1.5;
+}
+
+
+
+/* "동네인증 완료하기" 버튼 */
+.btn-confirm {
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--orange-600);
+    color: var(--gray-000);
+    font-size: 1.125rem;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-confirm:disabled {
+    background: color-mix(in srgb, var(--orange-600) 30%, transparent); /* 비활성 상태 */
+    cursor: not-allowed;
+}
+
+/* =========================================================
+    에러메세지 모달 (검색한 동네가 실제 위치와 너무 멀 때 표시)
+   ========================================================= */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+/* JS에서 hidden 속성을 붙였다 뗐다 하면서 모달을 열고 닫음 */
+.modal-overlay[hidden] { display: none; }
+
+/* 모달 카드 자체 */
+.modal-box {
+    background: var(--gray-000);
+    border-radius: 12px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+}
+
+.modal-message {
+    font-size: 1rem;
+    color: var(--gray-900);
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+/* "취소" / "동네 수정하기" 버튼 */
+.modal-actions { display: flex; gap: 12px; }
+
+.modal-actions button {
+    flex: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* 취소 버튼 */
+.btn-modal-cancel {
+    border: 1px solid var(--gray-200);
+    background: var(--gray-000);
+    color: var(--gray-900);
+}
+
+/* 동네 수정하기 버튼 */
+.btn-modal-edit {
+    border: none;
+    background: var(--orange-600);
+    color: var(--gray-000);
+    font-weight: bold;
+}
+
+
+/* =========================================================
+    반응형 (데스크톱 퍼스트 방식)
+    화면이 좁아질수록 1200px → 768px → 480px 순서로 겹쳐서 적용됨
+   ========================================================= */
+
+/* ---------- 1200px 이하 ---------- */
+@media (max-width: 1200px) {
+    .location {
+        padding: 48px 60px 48px;
+        padding-top: calc(60px + 48px);
+    }
+
+    /* 지도 높이를 화면 폭에 맞게 축소 (468px -> 400px) */
+    .location-map { height: 400px; }
+}
+
+/* ---------- 1024px 이하 ---------- */
+    .location {
+        padding: 40px 32px;
+        padding-top: calc(60px + 40px);
+    }
+
+    .input-row {
+        flex-wrap: wrap;
+    }
+
+    .location-map {
+        width: 100%;
+        height: 360px;
+    }
+}
+
+/* ---------- 768px 이하 (태블릿 → 모바일) ---------- */
+@media (max-width: 768px) {
+    .location {
+        padding: 32px 24px 32px;
+        padding-top: calc(60px + 32px);
+    }
+
+    .location-label { font-size: 0.95rem; }
+
+    .input-row { gap: 8px; }
+
+    .btn-outline { padding: 12px 16px; font-size: 0.9rem; }
+
+    /* 지도 높이 한 단계 더 축소 (400px -> 320px) */
+    .location-map { height: 320px; }
+    .location-status { font-size: 0.95rem; }
+
+    .btn-confirm { padding: 14px; font-size: 1rem; }
+
+    /* 모달 크기도 화면에 맞게 축소 */
+    .modal-box { max-width: 300px; padding: 24px 20px; }
+    .modal-message { font-size: 0.95rem; }
+}
+
+/* ---------- 480px 이하 (작은 모바일) ---------- */
+@media (max-width: 480px) {
+    .location {
+        padding: 24px 16px 24px;
+        padding-top: calc(60px + 24px);
+    }
+
+    .location-input {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+    }
+
+    /* "내 동네 설정" 버튼: input-row는 계속 가로 배치를 유지하면서
+        clamp()로 버튼 크기만 화면 폭에 맞게 자연스럽게 줄임
+       (input-row를 세로로 바꾸면 검색결과 드롭다운 위치가 어긋나서 이 방식을 씀) */
+    .btn-outline {
+        padding: clamp(8px, 3vw, 14px) clamp(10px, 4vw, 20px);
+        font-size: clamp(0.75rem, 3vw, 1rem);
+        white-space: nowrap;
+    }
+
+    /* 지도 높이 최종 축소 (320px -> 260px) */
+    .location-map { height: 260px;}
+
+    .btn-confirm { font-size: 0.95rem; padding: 12px; }
+
+    /* 모달이 화면을 꽉 채우지 않도록 여백을 주고,
+       버튼 두 개(취소/동네 수정하기)는 좁은 화면에서 세로로 쌓음 */
+    .modal-overlay { padding: 16px; }
+    .modal-box { max-width: 100%; padding: 20px 16px; }
+    .modal-actions { flex-direction: column; }
+
+}
