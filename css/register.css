@@ -67,6 +67,56 @@ body {
     box-shadow: 0 0 0 2px var(--orange-600);
 }
 
+/* 이메일 입력 + 중복확인 */
+.register-id-row {
+    display: flex;
+    gap: 8px;
+}
+
+.register-id-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+.register-check-btn {
+    flex-shrink: 0;
+    padding: 14px 12px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--orange-600);
+    background-color: var(--gray-000);
+    border: 1px solid var(--orange-600);
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.register-check-btn:hover {
+    background-color: var(--gray-050);
+}
+
+.register-field-msg {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--gray-600);
+}
+
+.register-field-msg:empty {
+    display: none;
+}
+
+.register-field-msg.is-ok {
+    color: var(--gray-800);
+    font-weight: 600;
+}
+
+.register-field-msg.is-error {
+    color: var(--orange-600);
+    font-weight: 600;
+}
+
 /* 회원가입 제출 버튼 */
 .register-btn {
     width: 100%;
@@ -136,7 +186,8 @@ body {
     }
 
     .register-field input,
-    .register-btn {
+    .register-btn,
+    .register-check-btn {
         padding: 12px 14px;
         font-size: 0.9375rem;
     }
