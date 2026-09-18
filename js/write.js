@@ -3,6 +3,7 @@ const fileInput = document.querySelector("#write-image");
 const cameraIcon = document.querySelector(".icon-camera");
 const preview = document.querySelector(".preview");
 const imgCount = document.querySelector(".img-count");
+const priceInput = document.querySelector("#write-price");
 const params = new URLSearchParams(window.location.search);
 const editId = params.get("id");
 
@@ -81,7 +82,7 @@ async function loadProductForEdit() {
     }
 
     document.querySelector("#write-title").value = product.title || "";
-    document.querySelector("#write-price").value = product.price || "";
+    priceInput.value = product.price || "";
     document.querySelector("#write-desc").value = product.description || "";
     document.querySelector("#write-place").value = product.location || "";
 
@@ -96,12 +97,15 @@ async function loadProductForEdit() {
 
 loadProductForEdit();
 
+// 가격은 숫자만 입력
+priceInput.addEventListener("input", () => {
+  priceInput.value = priceInput.value.replace(/[^0-9]/g, "");
+});
+
 // 완료. 수정은 PATCH, 새 글은 POST
 document.querySelector(".btn-done").addEventListener("click", async () => {
   const title = document.querySelector("#write-title").value;
-  const price = Number(
-    document.querySelector("#write-price").value.replace(/[^0-9]/g, ""),
-  );
+  const price = Number(priceInput.value);
   const description = document.querySelector("#write-desc").value;
   const location = document.querySelector("#write-place").value;
 
