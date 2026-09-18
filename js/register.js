@@ -81,61 +81,64 @@ function resetEmailCheck() {
     checkedEmail = "";
 }
 
-// 가입 API가 email, password, nickname을 모두 봐야 409(이미 가입됨)를 줌
-async function canRequestSignupCheck({ showPasswordAlert } = {}) {
+// 회원가입 버튼: 이메일 → 닉네임 → 비밀번호 → 비밀번호 확인 순으로 첫 오류에서 멈춤
+async function validateSignupForm() {
     const email = userIdInput.value.trim();
     const nickname = nicknameInput.value.trim();
     const password = passwordInput.value;
     const passwordConfirm = passwordConfirmInput.value;
 
     if (!email) {
-        resetEmailCheck();
         setEmailMessage("이메일을 입력해주세요.", "is-error");
+        await appAlert("이메일을 입력해주세요.");
         userIdInput.focus();
         return null;
     }
 
     if (!EMAIL_PATTERN.test(email)) {
-        resetEmailCheck();
         setEmailMessage("올바른 이메일 형식이 아닙니다.", "is-error");
+        await appAlert("올바른 이메일 형식이 아닙니다.");
+        userIdInput.focus();
+        return null;
+    }
+
+    if (email !== checkedEmail) {
+        setEmailMessage("이메일 중복확인을 해주세요.", "is-error");
+        await appAlert("이메일 중복확인을 해주세요.");
         userIdInput.focus();
         return null;
     }
 
     if (!nickname) {
-        resetEmailCheck();
         await appAlert("닉네임을 입력해주세요.");
         nicknameInput.focus();
         return null;
     }
 
     if (!password) {
-        resetEmailCheck();
         setFieldMessage(passwordMsg, "비밀번호를 입력해주세요.", "is-error");
-        if (showPasswordAlert) {
-            await appAlert("비밀번호를 입력해주세요.");
-        }
+        await appAlert("비밀번호를 입력해주세요.");
         passwordInput.focus();
         return null;
     }
 
     if (!isPasswordValid(password)) {
-        resetEmailCheck();
         updatePasswordMessage();
-        if (showPasswordAlert) {
-            await appAlert("비밀번호는 8자 이상이며 영문 대문자, 소문자, 숫자, 특수문자를 모두 포함해야 합니다.");
-        }
+        await appAlert("비밀번호는 8자 이상이며 영문 대문자, 소문자, 숫자, 특수문자를 모두 포함해야 합니다.");
         passwordInput.focus();
         return null;
     }
 
-    if (!passwordConfirm || password !== passwordConfirm) {
-        resetEmailCheck();
-        if (!passwordConfirm) {
-            setFieldMessage(passwordConfirmMsg, "비밀번호를 다시 입력해주세요.", "is-error");
-        } else {
-            updatePasswordConfirmMessage();
-        }
+    if (!passwordConfirm) {
+        setFieldMessage(passwordConfirmMsg, "비밀번호를 다시 입력해주세요.", "is-error");
+        await appAlert("비밀번호를 다시 입력해주세요.");
+        passwordConfirmInput.focus();
+        return null;
+    }
+
+    if (password !== passwordConfirm) {
+        updatePasswordConfirmMessage();
+        await appAlert("비밀번호가 일치하지 않습니다.");
         passwordConfirmInput.focus();
         return null;
     }
@@ -216,15 +219,8 @@ passwordConfirmInput.addEventListener("input", updatePasswordConfirmMessage);
 registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const userData = await canRequestSignupCheck({ showPasswordAlert: true });
+    const userData = await validateSignupForm();
     if (!userData) {
-        return;
-    }
-
-    if (userIdInput.value.trim() !== checkedEmail) {
-        setEmailMessage("이메일 중복확인을 해주세요.", "is-error");
-        await appAlert("이메일 중복확인을 해주세요.");
-        userIdInput.focus();
         return;
     }
 
